@@ -1,10 +1,10 @@
-# NLyzer User Personas
+# NLyzer UX Research & Design Guide
 
 ## Overview
 
-This document contains detailed user personas for the NLyzer platform, representing our target audience across different AI-powered commerce agents. Each persona is based on extensive UX research and represents real user needs, behaviors, and expectations for AI-powered visual search and conversational commerce.
+This document contains comprehensive UX research for the NLyzer platform, including detailed user personas and design direction. The research represents our target audience across different AI-powered commerce agents and establishes the design foundation for consistent user experiences.
 
-These personas guide product decisions, feature development, and user experience design across all NLyzer agents and services.
+This guide informs product decisions, feature development, user experience design, and visual identity across all NLyzer agents and services.
 
 ---
 
@@ -288,6 +288,40 @@ Alexandra is a high-achieving executive undergoing personal transformation. She 
 
 ---
 
+## 🎨 Design Vibe: "Intelligent Sophistication"
+
+Based on analysis of our five user personas, the NLyzer platform should embody **"Intelligent Sophistication"** - a design approach that balances diverse user needs while maintaining brand cohesion across all touchpoints.
+
+### Core Design Keywords:
+1. **Sophisticated** - Appeals to Sarah (lawyer) and Alexandra (CTO) who need professional credibility
+2. **Intuitive** - Critical for Jennifer (busy mom) and David (efficient traveler) who value seamless UX
+3. **Confident** - Resonates with Maya's social validation needs and Sarah's confidence-building goals
+4. **Adaptive** - Reflects the AI's ability to understand context and evolve with user preferences
+5. **Refined** - Balances luxury expectations (Alexandra) with accessible elegance (Maya, David)
+
+### Design Rationale by Persona:
+
+**Maya Chen (24, Social Media)**: Needs something Instagram-worthy but not overwhelming - sophisticated enough to feel "grown up"
+
+**David Rodriguez (32, Business Travel)**: Values clean, efficient interfaces that convey reliability and expertise
+
+**Sarah Thompson (28, Corporate Lawyer)**: Requires professional aesthetic that builds confidence in high-stakes environments
+
+**Jennifer Park (35, Tech PM)**: Needs intuitive design that reduces cognitive load and decision fatigue
+
+**Alexandra Williams (42, CTO)**: Expects refined, premium experience that reflects her executive status
+
+### Visual Direction:
+- **Clean, breathing layouts** with strategic use of white space
+- **Subtle animations** that feel intelligent, not playful
+- **Premium typography** that conveys expertise and trustworthiness
+- **Confident color palette** - likely sophisticated neutrals with one signature accent
+- **Contextual adaptability** - interface elements that subtly shift based on user behavior and agent type
+
+This approach ensures the widget feels sophisticated enough for C-level executives while remaining approachable for younger users, with intelligence and adaptability as the unifying themes across all personas.
+
+---
+
 ## Conclusion
 
 These five personas represent the diverse user base for NLyzer's AI-powered commerce agents. Each persona addresses specific pain points and use cases:
@@ -298,4 +332,4 @@ These five personas represent the diverse user base for NLyzer's AI-powered comm
 - **Jennifer**: Proactive, time-efficient shopping automation
 - **Alexandra**: Expert curation and luxury personalized service
 
-Understanding these distinct user needs enables NLyzer to develop targeted features, messaging, and experiences that deliver maximum value for each agent type.
+Understanding these distinct user needs enables NLyzer to develop targeted features, messaging, and experiences that deliver maximum value for each agent type while maintaining a cohesive "Intelligent Sophistication" design language.
