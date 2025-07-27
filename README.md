@@ -352,6 +352,23 @@ nlyzer/
     └── admin_dashboard.py
 ```
 
+## 🛠️ Development
+
+### Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Run Local Dev Server
+```bash
+uvicorn nlyzer.main:app --reload --port 8000
+```
+
+### Run Tests
+```bash
+pytest
+```
+
 ## 📋 Operational Reality Checklist
 
 ### Day 1 Tasks
