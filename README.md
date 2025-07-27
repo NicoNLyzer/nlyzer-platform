@@ -10,56 +10,15 @@ NLyzer is a revolutionary Multimodal Conversational Commerce Platform that trans
 
 **"I Saw It, I Want It"** - Customers find outfit inspiration on social media, then visit their favorite store with NLyzer to find similar items available for purchase. Our AI agents understand context, weather, travel plans, and personal style to deliver perfect recommendations.
 
-## 👤 User Persona: Maya Chen
+## 👥 Target Users
 
-### Demographics
-- **Age**: 24
-- **Location**: Los Angeles, CA
-- **Occupation**: Social Media Marketing Coordinator
-- **Income**: $55,000/year
-- **Education**: Bachelor's in Communications
+Our platform serves diverse user personas across different shopping contexts and agent types. For detailed user research and persona specifications, see [USER_PERSONAS.md](USER_PERSONAS.md), which includes:
 
-### Lifestyle & Behavior
-Maya is a digitally-native trendsetter who spends 3+ hours daily on social platforms. She follows 200+ fashion influencers on Instagram and TikTok, saving outfit inspiration to mood boards. She shops online 2-3 times per month, mixing high-street brands with occasional splurges on designer pieces.
-
-### Social Media Habits
-- **Instagram**: Primary source for outfit inspiration, follows micro-influencers and street style accounts
-- **TikTok**: Discovers new trends through #OOTD and #StyleTok content
-- **Pinterest**: Creates detailed mood boards for different occasions and seasons
-- **Behavior**: Screenshots outfits but struggles to find similar items in her budget
-
-### Shopping Motivations
-- **Trend Validation**: Wants to stay current with emerging fashion trends
-- **Personal Expression**: Uses fashion to communicate her creative personality
-- **Social Confidence**: Dresses to feel confident in professional and social settings
-- **Value Seeking**: Looks for trendy pieces at accessible price points
-
-### Current Shopping Frustrations
-- **Visual Search Gap**: "I see amazing outfits on social media but can't find anything similar when I shop online"
-- **Time Wasting**: Spends hours scrolling through product pages trying to recreate looks
-- **Budget Misalignment**: Inspiration often comes from expensive designer pieces outside her price range
-- **Style Translation**: Struggles to adapt influencer looks to her body type and lifestyle
-- **Inventory Disappointment**: Finds similar items that are out of stock or discontinued
-
-### Expectations from Visual Search Tool
-- **Instant Recognition**: Upload a screenshot and immediately see similar available products
-- **Price Filtering**: "Show me versions of this outfit under $150"
-- **Style Adaptation**: "Find this look in my size" or "Make this work for my body type"
-- **Mix & Match**: Ability to find individual pieces from complete outfits
-- **Confidence Scoring**: Clear indication of how closely items match the inspiration
-- **Contextual Awareness**: "I need this for work" vs "I need this for a night out"
-
-### Success Scenarios
-- **Quick Discovery**: Finds and purchases 3 pieces from a TikTok outfit inspiration in under 10 minutes
-- **Budget Success**: Recreates a $500 influencer look for under $120
-- **Style Evolution**: Tool learns her preferences and suggests improvements to her saved looks
-- **Social Validation**: Receives compliments when wearing AI-recommended outfits
-
-### Behavioral Patterns
-- **Peak Usage**: Evening shopping sessions (7-10 PM) while browsing social media
-- **Decision Making**: Compares 3-5 similar options before purchasing
-- **Price Sensitivity**: Will abandon cart if total exceeds budget, prefers payment plans
-- **Social Proof**: Checks reviews and user-generated content before buying
+- **Maya Chen**: Visual Discovery Agent user (social media-inspired shopping)
+- **David Rodriguez**: Destination Commerce Agent user (travel-focused shopping)
+- **Sarah Thompson**: Style Psychology Agent user (confidence-building style evolution)
+- **Jennifer Park**: Predictive Commerce Agent user (proactive shopping automation)
+- **Alexandra Williams**: Concierge Service user (luxury personalized curation)
 
 ## 🏗️ Technical Architecture
 
