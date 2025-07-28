@@ -343,15 +343,22 @@ All designs embody our "Intelligent Sophistication" design vibe while serving th
 
 All product interactions must maintain the AI conversation context while providing rich product exploration. Users should feel like they're shopping with a knowledgeable assistant who remembers everything they've discussed.
 
-### **Product Card Specifications**
+### **Universal Product Card Template**
 
-#### **Standard Product Card Design**
-- **Dimensions**: 280px × 400px (desktop), responsive scaling
-- **Product Image**: High-quality hero shot, 280px × 200px with hover zoom
-- **AI Context Bar**: Teal stripe showing match score or AI reasoning
-- **Product Info**: Name, price, brand, key attributes (size, color)
-- **Action Buttons**: "Quick View" and "View Details" with distinct styling
-- **Match Indicator**: Visual confidence score for AI-recommended items
+#### **Industry-Agnostic Design Standards**
+- **Dimensions**: 280px × 400px (desktop), responsive scaling across all industries
+- **Hero Media**: High-quality primary image, 280px × 200px with hover enhancement
+- **AI Context Bar**: Teal stripe showing match score or AI reasoning (universal across products)
+- **Product Info**: Name, primary value (price/rating/availability), brand/source, key attributes
+- **Action Buttons**: "Quick View" and "View Details" with consistent styling
+- **Match Indicator**: Visual confidence score for all AI-recommended items
+
+#### **Cross-Industry Adaptations**
+- **Fashion**: Size, color, material, brand
+- **Hotels**: Amenities, location, star rating, nightly rate
+- **Restaurants**: Cuisine type, price range, dietary tags, rating
+- **Home Decor**: Dimensions, materials, room suitability, style
+- **Electronics**: Specifications, compatibility, warranty, model
 
 #### **Product Card States & Interactions**
 
@@ -362,21 +369,30 @@ All product interactions must maintain the AI conversation context while providi
 - Stock status indicator ("In Stock", "Low Stock", "Notify Me")
 
 **Hover State (Desktop)**:
-- Gentle elevation increase (4px → 8px shadow)
-- Secondary product image fades in (color/style variants)
+- Gentle elevation increase (4px → 8px shadow) - consistent across all industries
+- Secondary media fades in (variants, additional angles, or related content)
 - Action buttons slide up from bottom with smooth animation
-- AI reasoning tooltip: "Great for your Berlin trip because..."
+- AI reasoning tooltip with industry-specific language
 
 **Mobile Touch State**:
-- Single tap reveals action buttons overlay
-- Double tap opens Quick View modal
-- Long press shows additional options (save, share, compare)
+- Single tap reveals action buttons overlay (universal interaction)
+- Double tap opens Quick View modal (consistent behavior)
+- Long press shows additional options (save, share, compare, bookmark)
 
-#### **AI Context Integration**
-- **Match Score Display**: Percentage with visual indicator (85% match)
-- **AI Reasoning**: "Perfect for Santorini evenings" or "Matches your confidence goals"
-- **Context Tags**: "From your inspiration photo", "Recommended for Tuesday's meeting"
-- **Relationship Indicators**: "Completes the outfit", "Alternative option"
+#### **Universal AI Context Integration**
+- **Match Score Display**: Percentage with visual indicator (85% match) - same across all products
+- **AI Reasoning**: Context-specific explanations:
+  - Fashion: "Perfect for Santorini evenings" 
+  - Hotels: "Ideal for your business trip requirements"
+  - Restaurants: "Matches your dietary preferences and occasion"
+  - Home Decor: "Complements your modern aesthetic"
+- **Context Tags**: Universal tagging system:
+  - "From your inspiration image", "AI recommended", "Trending choice"
+- **Relationship Indicators**: Cross-industry relationship logic:
+  - Fashion: "Completes the outfit", "Alternative style"
+  - Hotels: "Near your other bookings", "Upgrade option" 
+  - Restaurants: "Pairs with your hotel", "Similar cuisine"
+  - Home Decor: "Matches selected pieces", "Room coordination"
 
 ### **Product Detail Modal - Context Preserved**
 
@@ -414,49 +430,66 @@ All product interactions must maintain the AI conversation context while providi
 - **View Full Product Page**: Opens in new tab, preserves modal state
 - **Close Modal**: Returns to exact previous state with search results
 
-### **Carousel Components for Multi-Item Displays**
+### **Universal Carousel Design System**
 
-#### **Wardrobe Builder Carousel**
+#### **Standard Carousel Architecture** (Consistent Across All Industries)
 
 **Design Specifications**:
 - **Container**: Full-width horizontal scroll with elegant scroll indicators
-- **Item Spacing**: 16px gaps with subtle dividers
-- **Navigation**: Arrow controls + touch/swipe gestures
-- **Grouping**: Visual sections for different outfit components
+- **Item Spacing**: 16px gaps with subtle dividers (universal spacing)
+- **Navigation**: Arrow controls + touch/swipe gestures (same interaction patterns)
+- **Grouping**: Visual sections adaptable to any product categorization
 
-**Interaction Patterns**:
-- **Individual Selection**: Click any item to view details
-- **Group Actions**: "Add All to Cart", "Save Complete Look"
-- **Customization**: Drag to reorder, remove unwanted items
-- **AI Feedback**: "This creates a cohesive look" or "Consider adding..."
+**Universal Interaction Patterns**:
+- **Individual Selection**: Click any item to view details (consistent behavior)
+- **Group Actions**: "Add All", "Save Collection", "Compare Selection"
+- **Customization**: Drag to reorder, remove unwanted items (same mechanics)
+- **AI Feedback**: Context-appropriate guidance for any product type
 
-#### **Trip Planning Activity Carousel**
+#### **Cross-Industry Carousel Examples**
 
-**Activity-Based Organization**:
-- **Business Meetings**: Professional pieces with confidence indicators
-- **Evening Dining**: Sophisticated options with cultural appropriateness notes
-- **Sightseeing**: Comfortable, weather-appropriate choices
-- **Transit**: Practical pieces for travel days
+##### **Collection Builder Carousel**
+Adaptable pattern for creating cohesive product groups:
 
-**Smart Features**:
-- **Weather Integration**: Icons showing suitability for forecasted conditions
-- **Versatility Scoring**: "This blazer works for 3/4 planned activities"
-- **Packing Optimization**: "Fits in carry-on" indicators
-- **Cultural Notes**: Discrete badges for local appropriateness
+**Fashion Application**: "Complete the Outfit"
+- Tops, bottoms, shoes, accessories with style coordination
+- AI feedback: "This creates a cohesive look"
 
-#### **Style Evolution Carousel (Sarah's Confidence Journey)**
+**Home Decor Application**: "Room Coordination" 
+- Furniture, lighting, accessories, textiles with aesthetic harmony
+- AI feedback: "These pieces create visual balance"
 
-**Progressive Enhancement Display**:
-- **Current Style**: Items matching existing preferences
-- **Stretch Options**: Slightly more sophisticated choices
-- **Aspiration Items**: Partnership-level professional pieces
-- **Confidence Boosters**: Historically successful style elements
+**Electronics Application**: "Complete Setup"
+- Main device, accessories, peripherals, software with compatibility
+- AI feedback: "This setup optimizes your workflow"
 
-**Psychological Features**:
-- **Confidence Predictions**: "This typically boosts your confidence by 20%"
-- **Body Celebration**: Focus on fit and flattering aspects
-- **Professional Context**: "Court-appropriate" or "Client dinner ready"
-- **Evolution Tracking**: Shows style journey progression
+**Hotel/Travel Application**: "Complete Trip Experience"
+- Accommodation, activities, dining, transportation with location coordination
+- AI feedback: "This itinerary maximizes your time"
+
+##### **Context-Driven Organization Carousel**
+Universal pattern for activity or purpose-based grouping:
+
+**Fashion**: Business meetings, casual weekends, special events, travel
+**Hotels**: Business travel, leisure stays, family trips, romantic getaways
+**Restaurants**: Date nights, business lunches, family dinners, casual meetings
+**Home Decor**: Entertaining spaces, work areas, relaxation zones, storage solutions
+**Electronics**: Gaming setups, productivity suites, creative workstations, home automation
+
+##### **Progression/Evolution Carousel**
+Universal pattern for showing advancement or sophistication levels:
+
+**Fashion**: Current style → stretch options → aspiration pieces
+**Hotels**: Standard rooms → premium options → luxury suites
+**Restaurants**: Familiar cuisines → adventurous choices → fine dining
+**Home Decor**: Current aesthetic → elevated options → designer pieces
+**Electronics**: Basic models → advanced features → professional grade
+
+**Smart Features Across Industries**:
+- **Compatibility Scoring**: How well items work together (universal concept)
+- **Context Integration**: Weather, occasion, budget, preferences (adaptable)
+- **Optimization Indicators**: Efficiency, value, suitability metrics
+- **Cultural/Contextual Notes**: Appropriate guidance for any domain
 
 ### **Context Preservation Mechanisms**
 
@@ -488,107 +521,176 @@ All product interactions must maintain the AI conversation context while providi
 - **Context Notes**: Reminder of why items were chosen
 - **Modification Assistance**: "Ask AI to adjust this selection"
 
-### **Agent-Specific Product Display Patterns**
+### **Universal Agent-Specific Display Patterns**
 
-#### **Maya Chen - Visual Discovery Results**
+#### **Visual Discovery Agent - Cross-Industry Pattern**
 
-**Grid Layout with Social Elements**:
-- **Match Score Prominence**: Large percentage displays (89%, 76%, 68%)
-- **Social Proof**: "Trending on TikTok" or "Instagram-worthy" badges
-- **Style Variations**: Color/pattern alternatives for each match
-- **Share Integration**: Easy Instagram Story or Pinterest sharing
+**Universal Grid Layout with Social Elements**:
+- **Match Score Prominence**: Large percentage displays (89%, 76%, 68%) - consistent across all products
+- **Social Proof**: Industry-appropriate trending indicators
+- **Product Variations**: Relevant alternatives for each match
+- **Share Integration**: Platform-appropriate sharing options
 
-**Refinement Interface**:
-- **Visual Filters**: Color swatches, pattern selectors, style sliders
-- **Price Brackets**: "Under $50", "$50-100", "$100-200", "Splurge"
-- **Occasion Tags**: Work, Weekend, Date Night, Special Event
-- **Trend Alignment**: "Very trendy", "Classic", "Emerging trend"
+**Industry Applications**:
+- **Fashion**: "Trending on TikTok", color/pattern alternatives, Instagram sharing
+- **Hotels**: "Most booked this week", room type alternatives, Pinterest travel boards
+- **Restaurants**: "Featured on food blogs", cuisine variations, Instagram food posts
+- **Home Decor**: "Pinterest favorite", color/style alternatives, home inspiration sharing
+- **Electronics**: "Tech reviewer choice", model alternatives, tech community sharing
 
-#### **David Rodriguez - Travel-Focused Carousels**
+**Universal Refinement Interface**:
+- **Visual Filters**: Adaptable filter types (color, category, features)
+- **Price Brackets**: Industry-appropriate price ranges
+- **Context Tags**: Universal occasion/use case tagging
+- **Trend Alignment**: "Popular", "Classic", "Emerging" (cross-industry)
 
-**Activity-Grouped Display**:
-- **Business Section**: Suits, blazers, dress shirts with formality ratings
-- **Casual Section**: Weekend wear with comfort and versatility scores
-- **Weather Protection**: Jackets, coats with climate suitability
-- **Accessories**: Shoes, bags, watches with multi-purpose ratings
+#### **Destination/Context Commerce Agent - Universal Pattern**
 
-**Packing Intelligence**:
-- **Versatility Matrix**: Visual grid showing item compatibility
-- **Weight/Space Indicators**: Packing efficiency metrics
-- **Care Instructions**: Wrinkle resistance, washing requirements
-- **Cultural Appropriateness**: Local dress code compliance
+**Context-Grouped Display**:
+- **Primary Context**: Main use case or location-based grouping
+- **Secondary Contexts**: Related or alternative scenarios
+- **Compatibility Scoring**: How well items work together
+- **Context Intelligence**: External data integration (weather, events, etc.)
 
-#### **Sarah Thompson - Confidence-Building Display**
+**Industry Applications**:
+- **Fashion**: Business meetings, travel activities, weather-appropriate clothing
+- **Hotels**: Business travel, leisure stays, family trips, special events
+- **Restaurants**: Date nights, business lunches, celebration dinners, casual meetings
+- **Home Decor**: Entertaining spaces, work areas, seasonal updates, lifestyle changes
+- **Electronics**: Gaming setups, work productivity, creative projects, smart home integration
+
+**Universal Smart Features**:
+- **Compatibility Matrix**: Visual grid showing item relationships
+- **Context Optimization**: Efficiency metrics for specific use cases
+- **External Integration**: Relevant data sources (weather, calendar, location)
+- **Cultural/Contextual Intelligence**: Appropriate guidance for any domain
+
+#### **Style Psychology Agent - Universal Confidence Pattern**
 
 **Psychology-Informed Layout**:
-- **Confidence Scoring**: Historical performance data for similar items
-- **Body Positivity**: Focus on fit and flattering aspects
-- **Professional Context**: Clear appropriateness indicators
-- **Evolution Path**: Current → stretch → aspiration item progression
+- **Confidence Scoring**: Historical performance data for user satisfaction
+- **Personal Empowerment**: Focus on positive attributes and fit
+- **Context Appropriateness**: Clear suitability indicators
+- **Evolution Path**: Current preferences → stretch options → aspiration items
 
-**Empowerment Features**:
-- **Success Stories**: "Similar items boosted confidence in past"
-- **Fit Assurance**: Size guides with body-positive language
-- **Style Coaching**: "Why this works for your body type"
-- **Outfit Building**: Complete professional looks with confidence predictions
+**Industry Applications**:
+- **Fashion**: Confidence-boosting clothing, professional advancement, body positivity
+- **Hotels**: Comfort-focused accommodations, status-appropriate stays, travel confidence
+- **Restaurants**: Dietary confidence, social appropriateness, culinary exploration
+- **Home Decor**: Space confidence, entertaining readiness, personal expression
+- **Electronics**: Technical confidence, productivity empowerment, creative enablement
 
-#### **Jennifer Park - Predictive Shopping Interface**
+**Universal Empowerment Features**:
+- **Success Stories**: "Similar choices worked well for you"
+- **Fit Assurance**: Appropriate sizing/compatibility guidance
+- **Personal Coaching**: Why specific choices align with user goals
+- **Complete Solutions**: Holistic approaches with confidence predictions
+
+#### **Predictive Commerce Agent - Universal Automation Pattern**
 
 **Timeline-Based Display**:
-- **Seasonal Preparation**: Items organized by when they'll be needed
-- **Event-Driven**: Upcoming occasions with suggested attire
-- **Family Coordination**: Jennifer + Emma items displayed together
-- **Size Progression**: Maternity timeline with size adjustments
+- **Seasonal Preparation**: Items organized by anticipated need timing
+- **Event-Driven**: Upcoming occasions with suggested products
+- **Lifecycle Coordination**: Items displayed in relevant groupings
+- **Progression Tracking**: Size, preference, or need evolution
 
-**Efficiency Features**:
-- **Bulk Actions**: "Approve all October essentials"
-- **Smart Grouping**: Related items bundled for one-click purchasing
-- **Timing Optimization**: Sale alerts and purchase recommendations
-- **Minimal Decision**: Pre-curated selections requiring little input
+**Industry Applications**:
+- **Fashion**: Seasonal wardrobe, event preparation, size changes, family coordination
+- **Hotels**: Regular travel patterns, seasonal destinations, recurring trips, group bookings
+- **Restaurants**: Regular dining patterns, celebration planning, dietary progression, family needs
+- **Home Decor**: Seasonal updates, lifestyle changes, home improvement phases, family growth
+- **Electronics**: Upgrade cycles, compatibility updates, expanding setups, technology evolution
 
-#### **Alexandra Williams - Luxury Curation Display**
+**Universal Efficiency Features**:
+- **Bulk Actions**: "Approve all recommendations", "Schedule all updates"
+- **Smart Grouping**: Related items bundled for efficient purchasing
+- **Timing Optimization**: Sale alerts, availability notifications, optimal purchase timing
+- **Minimal Decision**: Pre-curated selections requiring minimal user input
+
+#### **Concierge Service Agent - Universal Premium Pattern**
 
 **Premium Presentation**:
-- **Stylist Notes**: Personal recommendations from human expert
-- **Quality Indicators**: Fabric details, craftsmanship highlights
-- **Exclusivity**: Limited availability or designer collection status
-- **Investment Value**: Cost-per-wear calculations and longevity
+- **Expert Notes**: Personal recommendations from human specialists
+- **Quality Indicators**: Material, craftsmanship, or feature highlights
+- **Exclusivity**: Limited availability or premium status indicators
+- **Investment Value**: Long-term value calculations and benefits
 
-**Concierge Integration**:
-- **Personal Consultation**: Direct access to stylist for questions
-- **Fitting Services**: In-person or virtual fitting options
-- **Custom Alterations**: Tailoring services integration
-- **Relationship Building**: Purchase history and preference evolution
+**Industry Applications**:
+- **Fashion**: Personal styling, fabric expertise, designer access, wardrobe investment
+- **Hotels**: Travel concierge, room upgrades, exclusive experiences, loyalty benefits
+- **Restaurants**: Sommelier guidance, chef recommendations, private dining, culinary experiences
+- **Home Decor**: Interior design consultation, custom pieces, designer access, space planning
+- **Electronics**: Technical consultation, custom configurations, early access, setup services
+
+**Universal Concierge Integration**:
+- **Personal Consultation**: Direct access to human experts
+- **Custom Services**: Tailored solutions and personalization
+- **Exclusive Access**: Premium products, early releases, limited offerings
+- **Relationship Building**: Long-term preference tracking and evolution
 
 ### **Technical Implementation for Seamless Experience**
 
 #### **Single Page Application Architecture**
 
-**Modal-First Design**:
-- **Overlay System**: Products open in contextual overlays
-- **Background Preservation**: Search results remain visible behind modal
-- **Quick Navigation**: Rapid switching between products without reload
-- **State Management**: React/Vue state preservation during navigation
+**Universal Modal-First Design**:
+- **Overlay System**: Products open in contextual overlays (same pattern for hotels, restaurants, etc.)
+- **Background Preservation**: Search results remain visible behind modal (universal behavior)
+- **Quick Navigation**: Rapid switching between products without reload (consistent across industries)
+- **State Management**: React/Vue state preservation during navigation (industry-agnostic)
 
-**Performance Optimization**:
-- **Lazy Loading**: Product images load as needed
-- **Prefetching**: Anticipate likely product views and preload
-- **Caching Strategy**: Intelligent caching of product data and images
-- **Progressive Enhancement**: Core functionality works without JavaScript
+**Cross-Industry Performance Optimization**:
+- **Lazy Loading**: Product images/media load as needed (hotels, restaurants, fashion, electronics)
+- **Prefetching**: Anticipate likely product views and preload (universal prediction patterns)
+- **Caching Strategy**: Intelligent caching of product data and images (same architecture)
+- **Progressive Enhancement**: Core functionality works without JavaScript (industry-independent)
 
-#### **Context API Integration**
+#### **Universal Context API Integration**
 
-**AI Conversation Persistence**:
+**AI Conversation Persistence** (Same Across All Industries):
 - **WebSocket Connection**: Real-time AI communication maintained
 - **Session Management**: Server-side conversation state preservation
 - **Offline Resilience**: Local storage backup of conversation context
 - **Cross-Tab Sync**: Conversation continues across browser tabs
 
-**Search State Management**:
-- **Filter Persistence**: Maintains user preferences during navigation
-- **Result Caching**: Avoid re-running expensive AI searches
-- **Pagination Memory**: Remembers position in large result sets
-- **Comparison Mode**: Side-by-side product comparison without losing context
+**Universal Search State Management**:
+- **Filter Persistence**: Maintains user preferences during navigation (price, features, location, etc.)
+- **Result Caching**: Avoid re-running expensive AI searches (fashion, hotels, restaurants, etc.)
+- **Pagination Memory**: Remembers position in large result sets (universal pattern)
+- **Comparison Mode**: Side-by-side product comparison without losing context (works for any product type)
+
+### **Cross-Industry Implementation Considerations**
+
+#### **Industry-Specific Data Adaptations**
+
+**Product Attributes Schema**:
+- **Fashion**: Size, color, material, brand, season, style, care instructions
+- **Hotels**: Location, amenities, star rating, room type, check-in policies, accessibility
+- **Restaurants**: Cuisine type, dietary restrictions, price range, ambiance, hours, reservations
+- **Home Decor**: Dimensions, materials, style, room type, assembly, warranty
+- **Electronics**: Specifications, compatibility, warranty, brand, model, power requirements
+
+**Search Context Variables**:
+- **Fashion**: Body measurements, style preferences, occasion, season, budget
+- **Hotels**: Travel dates, location, group size, amenities needed, budget
+- **Restaurants**: Date/time, party size, dietary restrictions, occasion, cuisine preferences
+- **Home Decor**: Room dimensions, existing decor, lifestyle, entertaining needs, budget
+- **Electronics**: Current setup, use cases, technical requirements, future expansion plans
+
+#### **Universal AI Agent Training**
+
+**Cross-Industry Agent Capabilities**:
+- **Visual Recognition**: Product identification across all categories
+- **Context Understanding**: Occasion, environment, compatibility across domains
+- **Preference Learning**: User taste patterns regardless of product type
+- **Recommendation Logic**: Match scoring and relationship identification (universal)
+- **Natural Language**: Understanding queries in any product domain
+
+**Industry-Specific Knowledge Bases**:
+- **Fashion**: Style trends, seasonal appropriateness, body types, occasions
+- **Hotels**: Travel patterns, destination knowledge, amenities, cultural considerations
+- **Restaurants**: Cuisine types, dietary restrictions, occasion appropriateness, cultural preferences
+- **Home Decor**: Design principles, room functionality, lifestyle needs, aesthetic harmony
+- **Electronics**: Technical compatibility, use case optimization, performance requirements, ecosystem integration
 
 ---
 
