@@ -30,16 +30,17 @@ All designs embody our "Intelligent Sophistication" design vibe while serving th
 - **Dimensions**: Responsive width (min 320px, max 800px), 48px height
 - **Background**: Clean white with subtle border (#E5E5E7)
 - **Typography**: Premium sans-serif, 16px for input text
-- **Icons**: Text search icon + camera icon for visual search + AI sparkle indicator
+- **Icons**: Text search icon + camera icon + microphone icon + AI sparkle indicator
+- **Icon Layout**: Search glass (left) + Camera (center-right) + Microphone (right) + AI sparkle
 - **Accent Color**: Deep teal (#008B8B) for active states and AI elements
 
 #### **Enhanced Search States**
 
 **Default State**:
-- **Placeholder Text**: "Search by text, image, or describe what you want..."
-- **Dual Icons**: Search glass (left) + Camera (right) within the bar
+- **Placeholder Text**: "Search by text, image, voice, or describe what you want..."
+- **Triple Icons**: Search glass (left) + Camera (center-right) + Microphone (right) within the bar
 - **AI Indicator**: Subtle sparkle showing AI-powered capabilities
-- **Breathing Animation**: Gentle 2-second pulse on camera icon for discoverability
+- **Breathing Animation**: Gentle 2-second pulse alternating between camera and microphone icons for discoverability
 
 **Text Input State**:
 - **Auto-Suggestions**: AI-powered suggestions appear below
@@ -53,20 +54,101 @@ All designs embody our "Intelligent Sophistication" design vibe while serving th
 - **Instant Preview**: Thumbnail appears within search bar
 - **Processing State**: Elegant loading with "Analyzing style..." message
 
+**Voice Input Activation**:
+- **Microphone Click**: Smooth transition to voice recording interface
+- **Visual Feedback**: Pulsing red recording indicator replaces microphone icon
+- **Audio Visualization**: Subtle waveform animation showing voice input levels
+- **Processing State**: "Converting speech to text..." with elegant spinner
+- **Transcription Display**: Real-time text appears in search bar as user speaks
+
 **Multimodal State**:
-- **Combined Search**: Text + Image simultaneously
-- **Example**: Upload dress photo + type "in blue"
+- **Combined Search**: Text + Image + Voice simultaneously
+- **Examples**: Upload dress photo + say "in blue for evening wear" or type "Berlin trip" + voice "business casual"
 - **Refinement Options**: Appear as chips below search bar
-- **Context Preservation**: Maintains both inputs visible
+- **Context Preservation**: Maintains all inputs (text, image, voice) visible
 
 ### **Search Bar Intelligence Features**
 
 #### **Smart Placeholders** (Rotating based on user persona)
-- **Maya**: "Drop a screenshot or describe the vibe..."
-- **David**: "Search 'Berlin business trip' or upload inspiration..."
-- **Sarah**: "Find confidence-boosting workwear..."
-- **Jennifer**: "Quick search or let AI predict your needs..."
-- **Alexandra**: "Describe your vision or request stylist help..."
+- **Maya**: "Say 'find me this vibe', drop a screenshot, or type..."
+- **David**: "Voice search 'Berlin business trip' or upload inspiration..."
+- **Sarah**: "Ask for 'confidence-boosting workwear' or type..."
+- **Jennifer**: "Say 'what do I need' or let AI predict..."
+- **Alexandra**: "Voice your vision or request stylist help..."
+
+#### **Voice Input Capabilities**
+
+**Natural Language Processing**:
+- **Conversational Queries**: "I need something like this dress but in green"
+- **Context Understanding**: "Show me hotels near my conference venue"
+- **Preference Expression**: "I want restaurants that are romantic but not too fancy"
+- **Complex Requests**: "Find me workout clothes that transition to casual wear"
+
+**Cross-Industry Voice Examples**:
+- **Fashion**: "I saw this outfit on Instagram, find similar pieces under $200"
+- **Hotels**: "Book me a business hotel in downtown Seattle with gym and WiFi"
+- **Restaurants**: "Romantic dinner spot for anniversary, not too loud, good wine list"
+- **Home Decor**: "Mid-century modern chair for my living room, under $500"
+- **Electronics**: "Gaming laptop that can handle video editing, portable enough for travel"
+
+#### **Voice Input States & Animations**
+
+**Listening State**:
+- **Visual Indicator**: Pulsing red dot replaces microphone icon
+- **Audio Visualization**: Subtle waveform animation responds to voice levels
+- **Timeout Handling**: Auto-stops after 30 seconds of silence, user can extend
+- **Background**: Subtle color shift to indicate active listening mode
+
+**Processing State**:
+- **Transcription**: Real-time text appears in search bar as speech is converted
+- **AI Analysis**: "Understanding your request..." with spinner animation
+- **Context Integration**: Combines voice input with any existing text or images
+- **Error Recovery**: "Didn't catch that, try again" with helpful suggestions
+
+**Success State**:
+- **Confirmation**: "Got it! Searching for..." with transcribed text displayed
+- **Search Execution**: Seamless transition to results with voice context preserved
+- **Refinement Option**: "Refine your voice search" button for adjustments
+- **Learning Integration**: Voice patterns improve AI understanding over time
+
+#### **Voice Input Accessibility & Error Handling**
+
+**Accessibility Features**:
+- **Visual Indicators**: Clear visual feedback for users with hearing impairments
+- **Keyboard Alternative**: Spacebar to activate voice input, Enter to stop recording
+- **Screen Reader Support**: Descriptive ARIA labels for all voice interface states
+- **High Contrast Mode**: Voice indicators remain visible in accessibility themes
+- **Alternative Text Input**: "Type instead" option always available alongside voice
+- **Language Support**: Multi-language voice recognition with automatic detection
+
+**Error Recovery Patterns**:
+- **Network Issues**: "Connection lost, saving your voice input for retry"
+- **Recognition Failures**: "Didn't catch that clearly, here's what I heard: [text]. Correct?"
+- **Noise Interference**: "Background noise detected, try moving to a quieter space"
+- **Timeout Handling**: "Taking too long? Click to extend recording time"
+- **Permission Denied**: "No microphone access? Use text search or enable permissions"
+- **Browser Compatibility**: "Voice not supported on this browser, try text search"
+
+**Privacy & Permissions**:
+- **Clear Permission Request**: "NLyzer needs microphone access for voice search"
+- **Privacy Assurance**: "Voice data processed securely, not stored after search"
+- **User Control**: "Disable voice features in settings" with persistent preference
+- **Data Minimization**: Voice audio processed locally when possible
+- **Consent Management**: Clear opt-in/opt-out for voice feature usage
+
+**Cross-Industry Error Handling**:
+- **Fashion**: "Didn't understand style terms? Try 'casual dress' or 'work outfit'"
+- **Hotels**: "Hotel search unclear? Try 'business hotel downtown Seattle'"
+- **Restaurants**: "Cuisine not recognized? Try 'Italian restaurant' or 'pizza place'"
+- **Home Decor**: "Furniture unclear? Try 'living room chair' or 'dining table'"
+- **Electronics**: "Tech terms unclear? Try 'gaming laptop' or 'wireless headphones'"
+
+**Multi-Language Considerations**:
+- **Language Detection**: Automatic recognition of spoken language
+- **Translation Support**: "Translate search to English?" for unsupported languages
+- **Accent Adaptation**: AI learns from user's speech patterns over time
+- **Fallback Languages**: Multiple language models for better recognition
+- **Cultural Context**: Understanding region-specific terms and expressions
 
 #### **Contextual Enhancements**
 - **Time Awareness**: "Winter coats" appears in October
@@ -719,9 +801,11 @@ Universal pattern for showing advancement or sophistication levels:
 
 #### **Form Elements**
 - **Input Fields**: Clean borders with focus states in brand teal
+- **Voice Input Integration**: Microphone icon in all text input fields for universal voice support
 - **Validation**: Helpful, non-judgmental error messages
 - **Progression**: Clear step indicators for multi-stage flows
 - **Accessibility**: Proper labels and keyboard navigation
+- **Voice Accessibility**: Screen reader announcements for voice input states
 
 ### **Animation Specifications**
 
@@ -740,10 +824,12 @@ Universal pattern for showing advancement or sophistication levels:
 ### **Responsive Behavior**
 
 #### **Mobile Optimization (320px - 768px)**
-- **Touch Targets**: Minimum 44px for all interactive elements
+- **Touch Targets**: Minimum 44px for all interactive elements (microphone icons included)
 - **Widget Positioning**: Maintains 60px margin on smaller screens
+- **Voice Input**: Large, easily accessible voice recording button
 - **Modal Scaling**: Full-screen approach for complex interactions
 - **Navigation**: Thumb-friendly with swipe gestures where appropriate
+- **Voice Feedback**: Haptic feedback during voice recording on supported devices
 
 #### **Tablet Experience (768px - 1024px)**
 - **Hybrid Interactions**: Touch and hover state considerations
