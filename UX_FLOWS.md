@@ -368,7 +368,59 @@ All designs embody our "Intelligent Sophistication" design vibe while serving th
 
 ---
 
-### **5. Alexandra Williams - Concierge Service Journey**
+### **5. Marcus Chen - Technical Documentation Journey**
+*"Find It Fast" - Developer Documentation Discovery*
+
+#### **Entry Scenario**: Marcus needs to implement OAuth authentication with rate limiting for his FastAPI project
+
+**Flow Stages**:
+
+**Stage 1: Conversational Technical Search**
+- Marcus types: "FastAPI OAuth implementation with rate limiting"
+- AI recognizes technical context and activates Technical Documentation Agent
+- Search transforms: "I'll help you find the right implementation. What's your current setup?"
+- Context gathering: Python version, current auth system, API requirements
+
+**Stage 2: Technical Context Collection**
+- **Current Stack**: Auto-detects from query (FastAPI, Python)
+- **Implementation Level**: "Starting from scratch" vs "Modifying existing" vs "Debugging"
+- **Requirements**: Security level, user volume, integration constraints
+- **Preferred Learning**: "Show me examples" vs "Explain concepts" vs "Step-by-step guide"
+
+**Stage 3: Intelligent Documentation Search**
+- **Multi-Source Search**: Scans official docs, community guides, Stack Overflow, GitHub examples
+- **Version Compatibility**: Ensures examples work with current FastAPI version
+- **Context Filtering**: Prioritizes OAuth + rate limiting combinations
+- **Example Quality**: Ranks by completeness, recency, and community validation
+
+**Stage 4: Document Carousel with In-Chat Builder**
+- **Primary Sources**: Official FastAPI docs, OAuth spec, rate limiting guides displayed in carousel
+- **"Add to Workspace" Button**: One-click to add documents to in-chat workspace
+- **AI Suggestions**: "I found 5 related docs, add them to your workspace?"
+- **Smart Grouping**: Documents organized by implementation phase (Setup → Config → Testing)
+
+**Stage 5: In-Chat Documentation Workspace**
+- **Tab Interface**: 5-6 document tabs appear above the chat interface
+- **Split View**: Document viewer (70%) + persistent AI chat (30%)
+- **Instant Switching**: Click any tab to view that document without losing chat context
+- **Chat Integration**: "@show line 45" or "Based on the FastAPI docs in tab 2..."
+
+**Stage 6: Contextual Implementation Support**
+- **Document-Aware AI**: "I see you're reading the OAuth section, need help with implementation?"
+- **Code Extraction**: Select code in document, AI explains in chat
+- **Cross-Reference**: "This connects to the rate limiting example in tab 3"
+- **Implementation Tracking**: Check off completed steps while discussing with AI
+
+**Key In-Chat Documentation Features**:
+- **No Tab Switching**: All documents accessible within chat interface
+- **Persistent Conversation**: AI chat never refreshes or loses context
+- **Quick Document Switching**: Instant access to multiple docs without page reloads
+- **Session Continuity**: Workspace persists throughout development session
+- **Smart Connections**: AI identifies relationships between open documents
+
+---
+
+### **6. Alexandra Williams - Concierge Service Journey**
 *"Expert Curation" - Luxury Personalized Shopping*
 
 #### **Entry Scenario**: Alexandra uses the search bar to access premium concierge services
@@ -416,6 +468,100 @@ All designs embody our "Intelligent Sophistication" design vibe while serving th
 - **White-Glove Service**: Concierge-level attention to every detail
 - **Executive Appropriateness**: Understanding of C-level professional requirements
 - **Personal Transformation**: Supporting authentic style evolution over years
+
+---
+
+## 📚 In-Chat Technical Documentation Workspace
+
+### **Core Philosophy: Seamless Documentation Access Without Context Loss**
+
+The technical documentation system allows developers to build a workspace of multiple documentation pages within the chat interface. Instead of opening separate browser tabs, users can quickly switch between documents while maintaining their AI conversation context throughout their entire development session.
+
+### **In-Chat Documentation Builder Interface**
+
+#### **Workspace Creation & Management**
+
+**Adding Documents to Workspace**:
+- **"Add to Workspace" Button**: Appears on every documentation search result
+- **Chat Commands**: "@add FastAPI auth docs" or "@workspace FastAPI OAuth"
+- **AI Suggestions**: "I found 4 related docs, add them all to your workspace?"
+- **Smart Grouping**: AI automatically organizes docs by topic or implementation phase
+
+**Tab-Based Document Interface**:
+- **Horizontal Tabs**: Document tabs appear above chat interface (max 8 docs)
+- **Tab Indicators**: Show document type (Official 📝, Tutorial 🎓, Example 💻, Reference 📚)
+- **Active Tab Highlighting**: Current document clearly indicated
+- **Tab Management**: Drag to reorder, X to close, pin important docs
+
+#### **Split-View Interface Design**
+
+**Chat-Document Layout**:
+- **Document Viewer (70%)**: Full documentation with syntax highlighting and interactivity
+- **Persistent AI Chat (30%)**: Conversation continues alongside document viewing
+- **Seamless Integration**: No page reloads, instant document switching
+- **Responsive Design**: Mobile adapts to full-screen document with chat overlay
+
+**Document Viewer Features**:
+- **Syntax Highlighting**: Code examples with proper language formatting
+- **Interactive Code**: Click to copy, select to discuss with AI
+- **Reading Progress**: Visual indicator of progress through long documents
+- **Quick Navigation**: Table of contents, search within document
+
+#### **Enhanced AI-Document Interaction**
+
+**Document-Aware AI Responses**:
+- **Context Integration**: "Based on the FastAPI docs you're viewing in tab 2..."
+- **Cross-Reference**: "This relates to the OAuth section in your first tab"
+- **Code Discussion**: Select code in document, AI explains and suggests modifications
+- **Implementation Guidance**: "Ready to implement the rate limiting from tab 4?"
+
+**Chat Commands for Document Control**:
+- **"@show line 45"**: Jump to specific line in current document
+- **"@compare tab1 tab3"**: Side-by-side comparison view
+- **"@extract code"**: Pull code examples into chat for discussion
+- **"@search 'authentication'"**: Find term across all open documents
+
+#### **Workspace Persistence & Session Management**
+
+**Session Continuity**:
+- **Workspace Persistence**: All tabs and chat history saved throughout session
+- **Position Memory**: Each tab remembers exact scroll position and selections
+- **Chat History**: Complete conversation context maintained while switching docs
+- **Resume Sessions**: "Continue your OAuth workspace" on return visits
+
+**Smart Workspace Management**:
+- **Version Updates**: "FastAPI docs updated, refresh tab 2?"
+- **Related Documents**: AI suggests additional relevant docs to add
+- **Workspace Cleanup**: Remove outdated or irrelevant documents
+- **Export Workspace**: Share complete workspace with team members
+
+#### **Cross-Document Intelligence**
+
+**Smart Connections**:
+- **Concept Linking**: AI identifies relationships between open documents
+- **Implementation Flow**: Shows logical progression through multiple docs
+- **Dependency Tracking**: "You'll need the setup from tab 1 before tab 3"
+- **Gap Detection**: "Missing error handling docs, should I find some?"
+
+**Navigation Without Context Loss**:
+- **Instant Switching**: Zero-latency document switching
+- **Context Breadcrumbs**: "OAuth Setup → Rate Limiting → Error Handling"
+- **Chat-Document Sync**: Chat references link directly to document sections
+- **Reading Flow**: Natural progression through implementation steps
+
+### **Benefits of In-Chat Documentation System**
+
+#### **Developer Efficiency**
+- **No Tab Management**: Eliminates browser tab chaos and confusion
+- **Context Preservation**: AI conversation never interrupted or lost
+- **Quick Switching**: Instant access to multiple documentation sources
+- **Implementation Support**: AI guides through multi-document implementation
+
+#### **Enhanced Learning**
+- **Guided Discovery**: AI suggests relevant documents as you learn
+- **Cross-Reference Understanding**: See how concepts connect across sources
+- **Progressive Learning**: Build knowledge systematically with AI guidance
+- **Practical Focus**: Emphasis on implementation rather than theory
 
 ---
 
