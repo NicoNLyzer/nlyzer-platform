@@ -12,7 +12,12 @@ NLyzer is a revolutionary Multimodal Conversational Commerce Platform that trans
 
 ## 👥 Target Users
 
-Our platform serves diverse user personas across different shopping contexts and agent types. For detailed user research, persona specifications, and design direction, see [UX_RESEARCH.md](UX_RESEARCH.md), which includes:
+Our platform serves diverse user personas across different shopping contexts and agent types. For detailed user research and design direction, see:
+
+- **[UX_RESEARCH.md](UX_RESEARCH.md)**: User personas and design vibe specifications
+- **[UX_FLOWS.md](UX_FLOWS.md)**: Complete user journeys and interface design
+
+**Key User Personas**:
 
 - **Maya Chen**: Visual Discovery Agent user (social media-inspired shopping)
 - **David Rodriguez**: Destination Commerce Agent user (travel-focused shopping)
