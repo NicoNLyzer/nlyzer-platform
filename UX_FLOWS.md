@@ -337,6 +337,261 @@ All designs embody our "Intelligent Sophistication" design vibe while serving th
 
 ---
 
+## 🛍️ Product Display & Context-Preserving Navigation
+
+### **Core Philosophy: Never Break the AI Conversation**
+
+All product interactions must maintain the AI conversation context while providing rich product exploration. Users should feel like they're shopping with a knowledgeable assistant who remembers everything they've discussed.
+
+### **Product Card Specifications**
+
+#### **Standard Product Card Design**
+- **Dimensions**: 280px × 400px (desktop), responsive scaling
+- **Product Image**: High-quality hero shot, 280px × 200px with hover zoom
+- **AI Context Bar**: Teal stripe showing match score or AI reasoning
+- **Product Info**: Name, price, brand, key attributes (size, color)
+- **Action Buttons**: "Quick View" and "View Details" with distinct styling
+- **Match Indicator**: Visual confidence score for AI-recommended items
+
+#### **Product Card States & Interactions**
+
+**Default State**:
+- Clean presentation with subtle shadow elevation
+- AI match score prominently displayed (if applicable)
+- Price with clear currency and any discounts highlighted
+- Stock status indicator ("In Stock", "Low Stock", "Notify Me")
+
+**Hover State (Desktop)**:
+- Gentle elevation increase (4px → 8px shadow)
+- Secondary product image fades in (color/style variants)
+- Action buttons slide up from bottom with smooth animation
+- AI reasoning tooltip: "Great for your Berlin trip because..."
+
+**Mobile Touch State**:
+- Single tap reveals action buttons overlay
+- Double tap opens Quick View modal
+- Long press shows additional options (save, share, compare)
+
+#### **AI Context Integration**
+- **Match Score Display**: Percentage with visual indicator (85% match)
+- **AI Reasoning**: "Perfect for Santorini evenings" or "Matches your confidence goals"
+- **Context Tags**: "From your inspiration photo", "Recommended for Tuesday's meeting"
+- **Relationship Indicators**: "Completes the outfit", "Alternative option"
+
+### **Product Detail Modal - Context Preserved**
+
+#### **Modal Design Specifications**
+- **Layout**: Split-screen with product details (70%) and AI chat context (30%)
+- **Background**: Subtle backdrop blur, product focus maintained
+- **Header**: Breadcrumb showing "AI Search → Visual Match → Product Name"
+- **Chat Sidebar**: Persistent AI conversation with relevant context
+
+#### **Product Detail Content**
+
+**Primary Section (70% width)**:
+- **Hero Gallery**: Large product images with zoom, 360° view if available
+- **Product Information**: Name, price, detailed description, specifications
+- **Size & Color Selection**: Interactive swatches with availability
+- **Add to Cart**: Prominent CTA with quantity selector
+- **AI Insights Panel**: Why this product was recommended, styling suggestions
+
+**AI Context Sidebar (30% width)**:
+- **Conversation Continuation**: Previous chat messages remain visible
+- **AI Avatar**: Consistent assistant presence
+- **Related Questions**: "How would this work for my trip?", "Show me similar options"
+- **Action Buttons**: "Ask AI about this", "Get styling advice", "Find alternatives"
+
+#### **Navigation Without Context Loss**
+
+**Within Modal Navigation**:
+- **Related Products**: Carousel at bottom showing similar items
+- **Complete the Look**: AI-suggested complementary pieces
+- **Size Guide**: Overlay that doesn't close main modal
+- **Reviews**: Tab system within modal, AI highlights relevant reviews
+
+**Exit Strategies**:
+- **Continue Shopping**: Returns to search results with context intact
+- **View Full Product Page**: Opens in new tab, preserves modal state
+- **Close Modal**: Returns to exact previous state with search results
+
+### **Carousel Components for Multi-Item Displays**
+
+#### **Wardrobe Builder Carousel**
+
+**Design Specifications**:
+- **Container**: Full-width horizontal scroll with elegant scroll indicators
+- **Item Spacing**: 16px gaps with subtle dividers
+- **Navigation**: Arrow controls + touch/swipe gestures
+- **Grouping**: Visual sections for different outfit components
+
+**Interaction Patterns**:
+- **Individual Selection**: Click any item to view details
+- **Group Actions**: "Add All to Cart", "Save Complete Look"
+- **Customization**: Drag to reorder, remove unwanted items
+- **AI Feedback**: "This creates a cohesive look" or "Consider adding..."
+
+#### **Trip Planning Activity Carousel**
+
+**Activity-Based Organization**:
+- **Business Meetings**: Professional pieces with confidence indicators
+- **Evening Dining**: Sophisticated options with cultural appropriateness notes
+- **Sightseeing**: Comfortable, weather-appropriate choices
+- **Transit**: Practical pieces for travel days
+
+**Smart Features**:
+- **Weather Integration**: Icons showing suitability for forecasted conditions
+- **Versatility Scoring**: "This blazer works for 3/4 planned activities"
+- **Packing Optimization**: "Fits in carry-on" indicators
+- **Cultural Notes**: Discrete badges for local appropriateness
+
+#### **Style Evolution Carousel (Sarah's Confidence Journey)**
+
+**Progressive Enhancement Display**:
+- **Current Style**: Items matching existing preferences
+- **Stretch Options**: Slightly more sophisticated choices
+- **Aspiration Items**: Partnership-level professional pieces
+- **Confidence Boosters**: Historically successful style elements
+
+**Psychological Features**:
+- **Confidence Predictions**: "This typically boosts your confidence by 20%"
+- **Body Celebration**: Focus on fit and flattering aspects
+- **Professional Context**: "Court-appropriate" or "Client dinner ready"
+- **Evolution Tracking**: Shows style journey progression
+
+### **Context Preservation Mechanisms**
+
+#### **Technical State Management**
+
+**Conversation State Persistence**:
+- **Session Storage**: All chat history and AI context preserved locally
+- **Search Context**: Original query, filters, and results maintained
+- **Navigation History**: Breadcrumb trail for easy backtracking
+- **Preference Memory**: Size, style, and budget preferences remembered
+
+**URL Management**:
+- **Deep Linking**: Shareable URLs that restore full context
+- **Parameter Preservation**: Search terms, filters, and AI agent state
+- **History Management**: Browser back/forward maintains conversation flow
+- **Bookmark Friendly**: URLs include enough context for restoration
+
+#### **Cross-Page Context Preservation**
+
+**Product Page Integration**:
+- **AI Chat Widget**: Persistent chat assistant on product pages
+- **Context Banner**: "You found this through: Berlin business trip search"
+- **Return Path**: Clear navigation back to AI recommendations
+- **Related Suggestions**: AI continues providing relevant alternatives
+
+**Shopping Cart Context**:
+- **AI Attribution**: Shows which agent recommended each item
+- **Bundle Suggestions**: "Complete your Berlin wardrobe" upsells
+- **Context Notes**: Reminder of why items were chosen
+- **Modification Assistance**: "Ask AI to adjust this selection"
+
+### **Agent-Specific Product Display Patterns**
+
+#### **Maya Chen - Visual Discovery Results**
+
+**Grid Layout with Social Elements**:
+- **Match Score Prominence**: Large percentage displays (89%, 76%, 68%)
+- **Social Proof**: "Trending on TikTok" or "Instagram-worthy" badges
+- **Style Variations**: Color/pattern alternatives for each match
+- **Share Integration**: Easy Instagram Story or Pinterest sharing
+
+**Refinement Interface**:
+- **Visual Filters**: Color swatches, pattern selectors, style sliders
+- **Price Brackets**: "Under $50", "$50-100", "$100-200", "Splurge"
+- **Occasion Tags**: Work, Weekend, Date Night, Special Event
+- **Trend Alignment**: "Very trendy", "Classic", "Emerging trend"
+
+#### **David Rodriguez - Travel-Focused Carousels**
+
+**Activity-Grouped Display**:
+- **Business Section**: Suits, blazers, dress shirts with formality ratings
+- **Casual Section**: Weekend wear with comfort and versatility scores
+- **Weather Protection**: Jackets, coats with climate suitability
+- **Accessories**: Shoes, bags, watches with multi-purpose ratings
+
+**Packing Intelligence**:
+- **Versatility Matrix**: Visual grid showing item compatibility
+- **Weight/Space Indicators**: Packing efficiency metrics
+- **Care Instructions**: Wrinkle resistance, washing requirements
+- **Cultural Appropriateness**: Local dress code compliance
+
+#### **Sarah Thompson - Confidence-Building Display**
+
+**Psychology-Informed Layout**:
+- **Confidence Scoring**: Historical performance data for similar items
+- **Body Positivity**: Focus on fit and flattering aspects
+- **Professional Context**: Clear appropriateness indicators
+- **Evolution Path**: Current → stretch → aspiration item progression
+
+**Empowerment Features**:
+- **Success Stories**: "Similar items boosted confidence in past"
+- **Fit Assurance**: Size guides with body-positive language
+- **Style Coaching**: "Why this works for your body type"
+- **Outfit Building**: Complete professional looks with confidence predictions
+
+#### **Jennifer Park - Predictive Shopping Interface**
+
+**Timeline-Based Display**:
+- **Seasonal Preparation**: Items organized by when they'll be needed
+- **Event-Driven**: Upcoming occasions with suggested attire
+- **Family Coordination**: Jennifer + Emma items displayed together
+- **Size Progression**: Maternity timeline with size adjustments
+
+**Efficiency Features**:
+- **Bulk Actions**: "Approve all October essentials"
+- **Smart Grouping**: Related items bundled for one-click purchasing
+- **Timing Optimization**: Sale alerts and purchase recommendations
+- **Minimal Decision**: Pre-curated selections requiring little input
+
+#### **Alexandra Williams - Luxury Curation Display**
+
+**Premium Presentation**:
+- **Stylist Notes**: Personal recommendations from human expert
+- **Quality Indicators**: Fabric details, craftsmanship highlights
+- **Exclusivity**: Limited availability or designer collection status
+- **Investment Value**: Cost-per-wear calculations and longevity
+
+**Concierge Integration**:
+- **Personal Consultation**: Direct access to stylist for questions
+- **Fitting Services**: In-person or virtual fitting options
+- **Custom Alterations**: Tailoring services integration
+- **Relationship Building**: Purchase history and preference evolution
+
+### **Technical Implementation for Seamless Experience**
+
+#### **Single Page Application Architecture**
+
+**Modal-First Design**:
+- **Overlay System**: Products open in contextual overlays
+- **Background Preservation**: Search results remain visible behind modal
+- **Quick Navigation**: Rapid switching between products without reload
+- **State Management**: React/Vue state preservation during navigation
+
+**Performance Optimization**:
+- **Lazy Loading**: Product images load as needed
+- **Prefetching**: Anticipate likely product views and preload
+- **Caching Strategy**: Intelligent caching of product data and images
+- **Progressive Enhancement**: Core functionality works without JavaScript
+
+#### **Context API Integration**
+
+**AI Conversation Persistence**:
+- **WebSocket Connection**: Real-time AI communication maintained
+- **Session Management**: Server-side conversation state preservation
+- **Offline Resilience**: Local storage backup of conversation context
+- **Cross-Tab Sync**: Conversation continues across browser tabs
+
+**Search State Management**:
+- **Filter Persistence**: Maintains user preferences during navigation
+- **Result Caching**: Avoid re-running expensive AI searches
+- **Pagination Memory**: Remembers position in large result sets
+- **Comparison Mode**: Side-by-side product comparison without losing context
+
+---
+
 ## 🎨 Universal Interface Elements
 
 ### **Design System Components**
