@@ -231,7 +231,70 @@ Jennifer is a busy working mother who values efficiency and planning. She manage
 
 ---
 
-## 🎩 Persona 5: Alexandra Williams - NLyzer Concierge Service User
+## 💻 Persona 5: Marcus Chen - Technical Documentation Agent User
+
+*"Find It Fast" - Developer Documentation Discovery*
+
+### Demographics
+- **Age**: 29
+- **Location**: Austin, TX
+- **Occupation**: Senior Software Engineer at SaaS company
+- **Income**: $120,000/year
+- **Education**: BS in Computer Science
+- **Experience**: 6 years in full-stack development, technical lead on 3-person team
+
+### Lifestyle & Behavior
+Marcus is a pragmatic developer who values efficiency and accurate information. He frequently works with new APIs, frameworks, and tools, requiring constant reference to technical documentation. He's often under deadline pressure and needs to find specific implementation details quickly without reading entire documentation sets.
+
+### Professional Context
+- **Daily Documentation Usage**: 2-3 hours spent in various technical docs
+- **Information Needs**: API references, code examples, troubleshooting guides, best practices
+- **Time Pressure**: Often needs answers while actively coding or debugging
+- **Learning Style**: Prefers examples and practical implementation over theoretical explanations
+
+### Documentation Challenges
+- **Information Scattered**: Relevant details spread across multiple documents
+- **Search Limitations**: Static search doesn't understand context or intent
+- **Version Confusion**: Multiple versions of docs with unclear current standards
+- **Context Switching**: Loses mental model when jumping between different doc sites
+- **Example Scarcity**: Documentation lacks practical, copy-paste ready examples
+
+### Current Documentation Frustrations
+- **"Where is the auth example?"**: Spends 20 minutes finding a simple OAuth implementation
+- **Version Mismatch**: Follows outdated examples that don't work with current API version
+- **Incomplete Context**: Finds function reference but not the broader implementation pattern
+- **Multiple Tabs**: Has 15+ documentation tabs open, can't remember which contains what
+- **Copy-Paste Hell**: Manually collecting code snippets from various sources
+
+### Expectations from Technical Documentation AI
+- **Conversational Search**: "Show me how to implement OAuth with rate limiting in Python"
+- **Context Understanding**: AI knows he's building an API and suggests relevant patterns
+- **Example Generation**: Creates working code examples tailored to his specific use case
+- **Document Relationships**: Shows how different concepts connect across documentation
+- **Version Awareness**: Always provides current, compatible examples and references
+- **Collection Building**: Ability to save and organize relevant documentation sections
+
+### Success Scenarios
+- **Rapid Implementation**: Finds complete OAuth implementation in under 2 minutes
+- **Context Preservation**: Builds comprehensive understanding without losing mental model
+- **Example Library**: Creates personal collection of verified, working code examples
+- **Team Knowledge**: Shares curated documentation collections with team members
+
+### Behavioral Patterns
+- **Peak Usage**: During active development (9-11 AM, 2-5 PM)
+- **Query Style**: Specific, implementation-focused questions
+- **Documentation Preference**: Code examples > conceptual explanations
+- **Efficiency Focus**: Wants answers, not exploration
+
+### Technical Context Needs
+- **Language/Framework**: Currently working in (Python/FastAPI, React, Docker)
+- **Project Stage**: MVP development, production scaling, debugging
+- **Integration Requirements**: Third-party APIs, database connections, authentication
+- **Performance Constraints**: Response time requirements, scaling considerations
+
+---
+
+## 🎩 Persona 6: Alexandra Williams - NLyzer Concierge Service User
 
 *"Expert Curation" - Luxury Personalized Shopping*
 
@@ -324,12 +387,13 @@ This approach ensures the widget feels sophisticated enough for C-level executiv
 
 ## Conclusion
 
-These five personas represent the diverse user base for NLyzer's AI-powered commerce agents. Each persona addresses specific pain points and use cases:
+These six personas represent the diverse user base for NLyzer's AI-powered agents across commerce and technical domains. Each persona addresses specific pain points and use cases:
 
 - **Maya**: Social media inspiration and trend replication
 - **David**: Travel-specific and weather-appropriate shopping  
 - **Sarah**: Confidence-building and professional style evolution
 - **Jennifer**: Proactive, time-efficient shopping automation
+- **Marcus**: Technical documentation discovery and development efficiency
 - **Alexandra**: Expert curation and luxury personalized service
 
 Understanding these distinct user needs enables NLyzer to develop targeted features, messaging, and experiences that deliver maximum value for each agent type while maintaining a cohesive "Intelligent Sophistication" design language.
