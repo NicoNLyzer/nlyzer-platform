@@ -59,9 +59,10 @@ This is the central rulebook for our project. You MUST adhere to these guideline
     -   `pip install -r requirements.txt`
 
 ### Common Commands
--   **Run Local Dev Server (via Docker):**
-    -   `docker-compose up --build`
-    -   Starts all services (FastAPI, Postgres, Redis, Qdrant).
+- **Run Local Dev Environment:**
+  - `docker-compose up --build`
+  - Starts the entire stack: FastAPI app, PostgreSQL, Redis, and Qdrant.
+  - The FastAPI service is configured with --reload for hot-reloading.
 -   **Run Tests:**
     -   `pytest -v`
 -   **Database Migrations:** (Using Alembic)
