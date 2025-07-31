@@ -116,7 +116,7 @@ class ConversationManager:
 TECH_STACK = {
     "framework": "FastAPI",
     "async": "asyncio + aiohttp",
-    "database": "PostgreSQL + pgvector",
+    "database": "PostgreSQL (via psycopg2) + pgvector",
     "cache": "Redis",
     "search": "Qdrant/Pinecone + NLWeb",
     "ml": "OpenAI + Transformers",

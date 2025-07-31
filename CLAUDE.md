@@ -74,9 +74,12 @@ This is the central rulebook for our project. You MUST adhere to these guideline
 
 -   **Typing:** **YOU MUST** use Python type hints for all function signatures (parameters and return values).
 -   **Docstrings:** Use Google-style docstrings for all public functions and classes.
--   **Configuration & Secrets:** **CRITICAL** - All configuration (API keys, DB URLs) MUST be loaded from environment variables using a central Pydantic `BaseSettings` class.
-    -   **Action:** Create a `nlyzer/core/config.py` file. The settings class should load variables from a `.env` file (which is in `.gitignore`).
-    -   **Example `config.py`:**
+- **Configuration & Secrets:** **CRITICAL** - All application configuration (API keys, DB URLs, etc.) MUST be managed through the central Pydantic `BaseSettings` class located in `nlyzer/core/config.py`. All new settings MUST be added to this file and loaded from environment variables via our `.env` file. NEVER access `os.getenv()` directly in application logic.
+```Commit this small but important change:
+```bash
+git add CLAUDE.md
+git commit -m "docs(claude): Refine configuration rule to enforce central settings file"
+git push
         ```python
         from pydantic_settings import BaseSettings
 
@@ -105,6 +108,8 @@ This is the central rulebook for our project. You MUST adhere to these guideline
 -   `nlyzer/integrations/`: Third-party API clients (Stripe, etc.).
 -   `README.md`: The "what" and "why" of the business.
 -   `CLAUDE.md`: (This file) The "how" of the implementation.
+-   'nlyzer/db/': Contains all SQLAlchemy database table models.
+
 
 ---
 
