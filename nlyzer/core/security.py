@@ -11,9 +11,7 @@ from typing import Any
 from jose import jwt
 from passlib.context import CryptContext
 
-# Temporary constants - will be moved to config.py later
-SECRET_KEY = "a_very_secret_key_that_will_be_replaced"
-ALGORITHM = "HS256"
+from .config import settings
 
 # Create password hashing context with bcrypt scheme
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -55,12 +53,12 @@ def create_access_token(data: dict[str, Any], expires_delta: timedelta | None = 
     
     Generates a JWT token containing the provided data payload with an
     expiration time. If no expiration delta is provided, defaults to
-    15 minutes from creation time.
+    the configured ACCESS_TOKEN_EXPIRE_MINUTES setting.
     
     Args:
         data: Dictionary containing the claims to encode in the JWT token.
         expires_delta: Optional timedelta for token expiration. If None,
-                      defaults to 15 minutes.
+                      defaults to configured ACCESS_TOKEN_EXPIRE_MINUTES.
                       
     Returns:
         The encoded JWT token as a string.
@@ -70,10 +68,10 @@ def create_access_token(data: dict[str, Any], expires_delta: timedelta | None = 
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        # Default expiration of 15 minutes
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+        # Use configured expiration time
+        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
     to_encode.update({"exp": expire})
     
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
