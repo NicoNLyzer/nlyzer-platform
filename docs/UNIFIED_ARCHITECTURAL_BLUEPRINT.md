@@ -1,1604 +1,573 @@
-# NLyzer B2B Dashboard Specifications
+# The Unified Architectural Blueprint for NLyzer (Definitive, Hardened Master Plan)
 
-> 📊 **Comprehensive Dashboard Architecture for B2B SaaS Platform**
+> This is the definitive, unredacted, and fully detailed Unified Architectural Blueprint. It is a complete, self-contained document integrating all sections and their subsections with the highest level of specificity. It is the master plan for implementation.
 
-## Overview
+## 1. The Deployment Strategy
 
-This document defines the complete dashboard architecture for NLyzer's B2B clients. The dashboard is designed to serve diverse decision-makers from boutique retailers to enterprise chains, providing immediate value validation while scaling to meet complex analytical needs.
+### #### Technical Explanation
 
-**Core Principle**: Every decision-maker should understand their ROI within 30 seconds of viewing the dashboard.
+**Foundational Features (from repository analysis):**
+The open-source NLWeb project is designed for containerization, defined by its root Dockerfile and docker-compose.yml. The application entrypoint specified in the Dockerfile is CMD ["python", "-m", "nlweb.main"], which starts a FastAPI server. Its local deployment configuration, as detailed in docker-compose.yml, relies on environment variables (e.g., NLWEB_CONFIG_PATH, WEAVIATE_URL, OPENAI_API_KEY) to manage its runtime settings.
 
----
+**NLyzer's GCP Architecture:**
+Our managed service will forgo docker-compose in favor of a scalable, single-tenant GCP architecture. Each client deployment will consist of the following resources provisioned within a dedicated GCP Project to ensure absolute billing and resource isolation:
 
-## 🚀 0. Onboarding & First-Time User Experience - 5-Minute Deployment
+- **Compute:** The NLWeb Dockerfile will be used to build a container image, which will be stored and versioned in Google Artifact Registry. For each tenant, this image will be deployed as a dedicated GCP Cloud Run service. This serverless model provides perfect process isolation, automatic scaling (including to zero), and managed infrastructure, making it ideal for our single-tenant web application workload.
 
-### **Purpose**
-Deliver on the promise of immediate value by providing a seamless, confidence-building setup experience that gets clients from signup to revenue generation in under 5 minutes.
+- **Database:** Each tenant requires an isolated vector database. We will deploy the official Weaviate Docker image to a dedicated GCP Compute Engine (GCE) instance, provisioned from a pre-configured instance template. The GCE instance's persistent disk will store the Weaviate data, ensuring persistence across restarts.
 
-### **Step 1: Welcome & Value Proposition**
+- **Orchestration:** A central GCP Cloud Function, triggered by a Pub/Sub message, will act as our "Provisioning Robot," orchestrating the entire setup as detailed in the subsequent sections.
 
-#### **Welcome Modal Interface**
-```
-┌─ Welcome to NLyzer ─────────────────────────────────────────────────────┐
-│                                                                         │
-│               🎯 Welcome back, Emma Rodriguez!                          │
-│                    Director at Casa Moderna                             │
-│                                                                         │
-│     Let's connect your store and start turning visual inspiration       │
-│                      into revenue within 5 minutes.                     │
-│                                                                         │
-│  📊 Expected Results:                                                   │
-│  • 7x higher conversion rates from visual search                        │
-│  • Average $45K monthly revenue increase                                │
-│  • 22% boost in mobile performance                                      │
-│                                                                         │
-│                    [Continue Setup] [Watch 2-Min Demo]                 │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+### #### Simple Explanation
 
-### **Step 2: Connect Your Store - The Core Integration**
+We deploy NLWeb for each client using GCP Cloud Run, which gives them a private and secure mini-server. Each client also gets their own private Weaviate database. We automate the entire setup using a master robot (a GCP Cloud Function) that builds a new, dedicated environment for each client.
 
-#### **Platform Selection Interface**
-```
-┌─ Connect Your Store ────────────────────────────────────────────────────┐
-│                                                                         │
-│                   🔗 Choose Your Connection Method                      │
-│                                                                         │
-│  ┌─ Recommended (1-Click) ─────────────────────────────────────────┐    │
-│  │                                                                 │    │
-│  │  🛍️ Shopify Plus          🛒 BigCommerce         🏪 WooCommerce │    │
-│  │  [Connect with Shopify]   [Connect BigCommerce]  [Connect WooC] │    │
-│  │  ⚡ 30 seconds            ⚡ 30 seconds           ⚡ 45 seconds  │    │
-│  │                                                                 │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
-│                                                                         │
-│  ┌─ Custom Integration ────────────────────────────────────────────┐    │
-│  │                                                                 │    │
-│  │  🔑 API Key Integration    📄 Upload Product Catalog            │    │
-│  │  [Enter API Details]      [Upload CSV/XML File]                │    │
-│  │  ⏱️ 2-3 minutes           ⏱️ 1-2 minutes                       │    │
-│  │                                                                 │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
-│                                                                         │
-│          💡 Need help? [Chat with Setup Expert] [View Guide]           │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+## 2. The Automated Provisioning Handshake
 
-#### **OAuth Flow (Shopify Example)**
-```
-┌─ Shopify Connection ────────────────────────────────────────────────────┐
-│                                                                         │
-│        🛍️ Connecting to Casa Moderna Shopify Store...                  │
-│                                                                         │
-│  ┌─ Secure Authorization Process ─────────────────────────────────┐     │
-│  │                                                                 │     │
-│  │  ✅ Store verification complete                                 │     │
-│  │  ✅ Permissions approved                                        │     │
-│  │  🔄 Establishing secure connection...                           │     │
-│  │                                                                 │     │
-│  │  📊 Store Details Detected:                                    │     │
-│  │  • Store: casa-moderna.myshopify.com                           │     │
-│  │  • Products: 15,234 items                                      │     │
-│  │  • Collections: 89 categories                                  │     │
-│  │  • Monthly Orders: ~2,400                                      │     │
-│  │                                                                 │     │
-│  └─────────────────────────────────────────────────────────────────┘     │
-│                                                                         │
-│                        [Authorize & Continue]                          │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+This workflow details the event-driven process that securely translates a customer onboarding event into a live, configured NLWeb instance, solving the critical "chicken-and-egg" problem of configuration dependency.
 
-### **Step 3: Pre-flight Check & Data Ingestion**
+### 2.1. The Waiting Mechanism
 
-#### **Real-Time Processing Dashboard**
-```
-┌─ Setting Up Your Visual Search Engine ─────────────────────────────────┐
-│                                                                         │
-│               🚀 Analyzing Casa Moderna's Product Catalog              │
-│                                                                         │
-│  ┌─ Progress Checklist ───────────────────────────────────────────┐    │
-│  │                                                                 │    │
-│  │  ✅ Connected to Shopify store                                  │    │
-│  │  ✅ Downloaded product catalog (15,234 products)               │    │
-│  │  🔄 Analyzing product images... ████████████▌░░ 78% (2m left)  │    │
-│  │  ⏳ Generating AI embeddings... ░░░░░░░░░░░░░░░░ 0% (pending)   │    │
-│  │  ⏳ Building search index... ░░░░░░░░░░░░░░░░░░░ 0% (pending)   │    │
-│  │  ⏳ Performance optimization... ░░░░░░░░░░░░░░░░ 0% (pending)   │    │
-│  │                                                                 │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
-│                                                                         │
-│  ⚡ Processing Speed: 847 products/minute                               │
-│  📊 Current Status: Extracting visual features from product images     │
-│                                                                         │
-│         💬 "This is looking great! Grab a coffee while we work..."     │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+#### #### Technical Explanation
 
-#### **Quality Assessment Report**
-```
-┌─ Setup Complete - Quality Report ──────────────────────────────────────┐
-│                                                                         │
-│          🎉 Success! Your visual search engine is ready to go!         │
-│                                                                         │
-│  ┌─ Ingestion Summary ────────────────────────────────────────────┐    │
-│  │                                                                 │    │
-│  │  ✅ Products Successfully Processed: 15,017/15,234 (98.6%)     │    │
-│  │  ✅ High-Quality Images: 14,238 products (94.8%)               │    │
-│  │  ✅ Complete Product Data: 14,891 products (99.2%)             │    │
-│  │                                                                 │    │
-│  │  ⚠️  Attention Required:                                        │    │
-│  │  • 217 products missing high-resolution images                 │    │
-│  │    Impact: May reduce visual search accuracy                   │    │
-│  │    [View List] [Upload Better Images] [Ignore for Now]        │    │
-│  │                                                                 │    │
-│  │  • 126 products missing descriptions                           │    │
-│  │    Impact: Limited text-based context                          │    │
-│  │    [Auto-Generate] [Manual Review] [Skip]                     │    │
-│  │                                                                 │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
-│                                                                         │
-│                           [Continue to Launch]                         │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+The generic NLWeb application waits dormantly as a container image, not as a running instance, to eliminate costs for unconfigured tenants.
 
-### **Step 4: Go Live - Final Deployment**
+**The Dormant Blueprint:** The "waiting instance" is our generic NLWeb container image, built from the project's Dockerfile and stored by tag in Google Artifact Registry. It is functionally inert and incurs no cost while stored.
 
-#### **Widget Installation Interface**
-```
-┌─ You're Ready to Go Live! ─────────────────────────────────────────────┐
-│                                                                         │
-│              🚀 Your Visual Search Widget is Ready for Launch!         │
-│                                                                         │
-│  ┌─ Quick Installation ──────────────────────────────────────────┐     │
-│  │                                                                 │     │
-│  │  For Shopify Users (Recommended):                              │     │
-│  │  ✅ Widget automatically installed in your theme               │     │
-│  │  ✅ Positioned in header search bar                            │     │
-│  │  ✅ Mobile-optimized layout applied                            │     │
-│  │                                                                 │     │
-│  │  [Preview on Your Site] [Customize Appearance]                │     │
-│  │                                                                 │     │
-│  └─────────────────────────────────────────────────────────────────┘     │
-│                                                                         │
-│  ┌─ Custom Installation ─────────────────────────────────────────┐      │
-│  │                                                                 │     │
-│  │  Copy this code snippet to your site's <head> section:        │     │
-│  │                                                                 │     │
-│  │  <script src="https://cdn.nlyzer.ai/widget/v2.js"             │     │
-│  │          data-store-id="casa-moderna-15234"                    │     │
-│  │          data-theme="light"></script>                         │     │
-│  │                                                                 │     │
-│  │  [Copy Code] [Download Integration Guide] [Get Developer Help] │     │
-│  │                                                                 │     │
-│  └─────────────────────────────────────────────────────────────────┘     │
-│                                                                         │
-│  📊 Expected First Week Results:                                        │
-│  • 100-300 visual searches (based on your traffic)                     │
-│  • 15-25% conversion rate improvement                                   │
-│  • $3,000-8,000 additional revenue                                      │
-│                                                                         │
-│                    [Go to Dashboard] [Test Widget Live]                │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+**Resilient Startup Logic (Proposed Code Change):** The application's entrypoint, nlweb/main.py, must be modified to handle a missing or incomplete configuration gracefully. The main startup block will be wrapped in a try/except structure to prevent crash-looping in a non-obvious way.
 
-#### **Success Celebration & Next Steps**
-```
-┌─ Congratulations! 🎉 ─────────────────────────────────────────────────┐
-│                                                                         │
-│       Welcome to the future of e-commerce search, Casa Moderna!        │
-│                                                                         │
-│  ✅ Setup completed in 4 minutes, 32 seconds                           │
-│  ✅ 15,017 products ready for visual search                            │
-│  ✅ Widget live on casa-moderna.com                                     │
-│  ✅ AI agents activated and learning                                    │
-│                                                                         │
-│  🎯 Your Next Steps:                                                    │
-│  1. [View Live Dashboard] - See real-time results                      │
-│  2. [Share with Team] - Invite your marketing team                     │
-│  3. [Watch Training Videos] - Maximize your ROI                        │
-│  4. [Schedule Success Call] - 30-min strategy session                  │
-│                                                                         │
-│  📧 We'll send you a setup summary and send your first results         │
-│     within 24 hours. Emma Rodriguez (emma@casamoderna.com)             │
-│                                                                         │
-│                         [Enter Dashboard]                              │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+```python
+# Proposed change inside nlweb/main.py
+import sys
+import os
 
----
+def initialize_application():
+    try:
+        # Step 1: Attempt to load config from the GCS path specified in the environment.
+        config_path = os.environ.get("NLWEB_CONFIG_PATH")
+        if not config_path:
+            raise ValueError("NLWEB_CONFIG_PATH environment variable not set.")
+        config = load_config_from_gcs(config_path) # Assumes a helper function.
+        
+        # Step 2: Attempt to connect to the Weaviate DB specified in the environment.
+        weaviate_url = os.environ.get("WEAVIATE_URL")
+        if not weaviate_url:
+            raise ValueError("WEAVIATE_URL environment variable not set.")
+        weaviate_client = connect_to_weaviate(weaviate_url)
+        
+    except Exception as e:
+        # If config or DB is not ready, log the specific error and exit with a non-zero status code.
+        print(f"FATAL: Application startup failed: {e}. Configuration is not ready. Exiting.")
+        sys.exit(1) # This specific exit code is critical for Cloud Run's health checks.
+        
+    # ... proceed with normal application startup, attaching clients and config to the app state.```
 
-## 🏠 1. Dashboard (Overview) - The 30-Second ROI Snapshot
+**Cloud Run's Role:** This non-zero exit code will cause the Cloud Run startup health check to fail. Cloud Run's managed nature will automatically try to restart the container on an exponential backoff schedule, creating a managed, cost-effective "waiting" loop until the configuration dependencies are met.
 
-### **Purpose**
-Provide immediate value validation for busy decision-makers. This is the first page they see after login and must communicate success instantly.
+#### #### Simple Explanation
 
-### **Layout Structure**
+The "waiting instance" is like a flat-pack IKEA furniture kit (our generic NLWeb software) stored in our warehouse (Google Artifact Registry). It remains in the warehouse, costing us nothing, until an order comes in. We don't build the furniture and have it "wait" for instructions; we wait for the instructions before we even start building.
 
-#### **Hero Metrics Row** (Top of page, full width)
-Four large metric cards with real-time data:
+### 2.2. The Configuration Generation
 
-1. **Visual Search Conversion Rate**
-   - Primary metric: "22.3%" (large, bold)
-   - Comparison: "↑15% vs last month" (green arrow)
-   - Baseline: "vs 3.1% text search" (smaller text)
-   - Sparkline showing 30-day trend
+#### #### Technical Explanation
 
-2. **Revenue Impact**
-   - Primary metric: "$45,892" (this month)
-   - Attribution: "from visual search"
-   - Growth: "+$12,340 vs last month"
-   - Percentage of total revenue
+The process is triggered by the Provisioning Cloud Function consuming a message from a GCP Pub/Sub topic.
 
-3. **ROI Calculator**
-   - Live calculation: "3.2x ROI"
-   - Formula shown: "($45,892 revenue - $299 cost) / $299"
-   - Time to payback: "Paid back in 4 days"
-   - Annual projection: "$168,000 annual impact"
+**Trigger:** The Provisioning Cloud Function is configured with a Pub/Sub trigger, subscribed to the provisioning-requests topic. It activates upon receiving a message with a defined schema.
 
-4. **Active Searches Now**
-   - Real-time counter: "47 active searches"
-   - Peak today: "Peak: 234 at 2:15 PM"
-   - Usage percentage: "23% of plan limit"
-   - Mobile/Desktop split indicator
+**Secure Credential Storage:** The function's first action is to extract sensitive data from the message payload (e.g., credentials.shopify_access_token) and write it directly to Google Secret Manager. It will create a new secret with a predictable name, such as tenant-{tenant_id}-shopify-token.
 
-#### **Performance Comparison Widget**
-Visual comparison showing the power of visual search:
+**YAML Generation (Repo-Aware):** The function programmatically generates the nlweb_config.yml file as a string. The structure of this YAML will precisely match the schemas expected by the factory patterns in nlweb/data_loaders/__init__.py and nlweb/tools/__init__.py. For any sensitive value, it will embed the full resource path to the secret in Secret Manager, not the raw secret itself.
 
-```
-Traditional Text Search:     ████ 3.1% conversion
-Visual Search:              ████████████████████ 22.3% conversion
-                                        7.2x better
-
-Mobile Performance:         ████████████████ 18.7% (visual)
-                           ██ 1.8% (text)
-                                     10.4x better on mobile
-```
+**Upload to GCS:** The function creates a new, dedicated GCS bucket (e.g., nlyzer-config-{tenant_id}) and uploads the generated nlweb_config.yml string as a file object.
 
-#### **Quick Wins Section**
-Designed for personas like James Chen who need simple, concrete examples:
+#### #### Simple Explanation
 
-**This Week's Success Stories:**
-- 🏆 **Top Visual Search**: "Outfit from @streetstyle_king" → 12 sales, $1,847 revenue
-- 💰 **Highest Value Search**: "Living room like Pinterest" → 1 sale, $3,420 order
-- ⏱️ **Time Saved**: Average customer finds products 4.2 minutes faster
-- 📱 **Mobile Win**: 67% of visual searches from mobile (vs 45% text)
+When a work order arrives in our system, our master robot (the Cloud Function) gets to work. Its first job is to take the client's secret password (their API key) and lock it in a secure digital vault (Secret Manager). Then, it writes the assembly instructions (config.yml) for the client's server. Instead of writing the secret password on the instructions, it just writes the location of the vault where the password is kept. Finally, it places this instruction sheet into a private, labeled folder (Cloud Storage) just for that client.
 
-#### **Agent Performance Summary**
-Shows available AI agents based on subscription tier:
+### 2.3. The Secure Application
 
-**Starter Tier Display:**
-- ✅ Visual Discovery Agent: Active (89% accuracy)
-- 🔒 Destination Commerce: Upgrade to Professional
-- 🔒 Style Psychology: Upgrade to Professional  
-- 🔒 Predictive Commerce: Enterprise only
+#### #### Technical Explanation
 
-**Professional Tier Display:**
-- ✅ Visual Discovery: Active (91% accuracy)
-- ✅ Destination Commerce: Active (73% trip conversion)
-- ✅ Style Psychology: Active (learning preferences)
-- 🔒 Predictive Commerce: Upgrade to Enterprise
+The configuration is securely applied by deploying the Cloud Run service with a least-privilege identity and environment variables pointing to the configuration resources.
 
-#### **Industry Benchmark Section**
-Critical for competitive personas like Emma Rodriguez:
+**IAM & Service Accounts:** The Provisioning Function creates a dedicated GCP Service Account for the tenant (e.g., sa-{tenant_id}@...). It then applies fine-grained IAM bindings to this service account, granting it roles/storage.objectViewer on the specific GCS config bucket and roles/secretmanager.secretAccessor on the specific secret versions created in the previous step.
 
-```
-Your Performance vs Industry Average (Home Decor)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-You:             ████████████████████ 22.3% conversion
-Industry Avg:    ████ 4.8% conversion
-Top Performer:   ███████████████████████ 26.1% conversion
-
-"You're outperforming 87% of home decor retailers"
-```
+**Secret Resolution (Proposed Code Change):** We will add a helper function, likely in a new nlweb/gcp_utils.py module, to recursively traverse the loaded YAML config dictionary and resolve any string values that match the Secret Manager path format.
 
-#### **Your Top 3 Growth Opportunities**
-Interactive AI-generated recommendation cards that transform insights into actions:
+```python
+# Proposed function in nlweb/gcp_utils.py
+from google.cloud import secretmanager
 
-**Card 1: Inventory Opportunity**
-```
-┌─ 🎯 Inventory Opportunity ──────────────────────────────────────────────┐
-│                                                                         │
-│  💰 You're missing out on "Emerald Green Sofas"                        │
-│                                                                         │
-│  📊 Data: 34 searches this week with an estimated $12,000 in missed    │
-│          revenue. Customers are actively looking but finding nothing.  │
-│                                                                         │
-│  🎯 Impact: Adding 5-8 emerald green sofa options could capture        │
-│           this demand and boost monthly revenue by $8,000-15,000       │
-│                                                                         │
-│                    [🚨 Alert My Buying Team]                          │
-│                                                                         │
-│  📈 Similar missed opportunities: "Rattan dining chairs" (28 searches) │
-│                                   "Brass floor lamps" (19 searches)    │
-└─────────────────────────────────────────────────────────────────────────┘
+def resolve_secrets_in_config(config: dict) -> dict:
+    client = secretmanager.SecretManagerServiceClient()
+    for key, value in config.items():
+        if isinstance(value, dict):
+            resolve_secrets_in_config(value)
+        elif isinstance(value, str) and value.startswith("projects/"):
+            try:
+                response = client.access_secret_version(name=value)
+                config[key] = response.payload.data.decode("UTF-8")
+            except Exception as e:
+                print(f"Failed to resolve secret: {value}. Error: {e}")
+                raise
+    return config
 ```
 
-**Card 2: Marketing Opportunity**
-```
-┌─ 📈 Marketing Opportunity ──────────────────────────────────────────────┐
-│                                                                         │
-│  ⭐ Your Sunday evening shoppers are GOLD                              │
-│                                                                         │
-│  📊 Data: Sunday 6-9 PM shoppers convert 45% better than weekly       │
-│          average (31.2% vs 21.6%). They spend 67% more per order.     │
-│                                                                         │
-│  🎯 Opportunity: Target this high-value window with premium product    │
-│                 promotions and personalized recommendations            │
-│                                                                         │
-│               [🎯 Create Sunday Evening Campaign]                      │
-│                                                                         │
-│  💡 Suggested: "Sunday Self-Care" collection featuring premium         │
-│      home accessories with 10% off for visual search users             │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+**Cloud Run Deployment:** The Provisioning Function programmatically defines and deploys a new Cloud Run service. The service definition will specify: the Artifact Registry URI of the generic NLWeb image; the identity of the tenant's dedicated Service Account; and the necessary environment variables (NLWEB_CONFIG_PATH=gs://..., WEAVIATE_URL=http://..., TENANT_ID=...).
 
-**Card 3: VIP Engagement Opportunity**
-```
-┌─ 🌟 VIP Engagement Opportunity ─────────────────────────────────────────┐
-│                                                                         │
-│  👑 Customer Sarah M. is your Visual Search Superfan                   │
-│                                                                         │
-│  📊 Activity: 8 visual searches this month, $1,247 in purchases        │
-│             Always engages with bohemian and sustainable products      │
-│                                                                         │
-│  🎯 Action: She's primed for VIP treatment and could become a brand    │
-│            advocate. Personal outreach could increase her LTV by 3x.   │
-│                                                                         │
-│                [👑 View Her Profile & Send VIP Discount]               │
-│                                                                         │
-│  📧 Suggested message: "Hi Sarah! We noticed you love our sustainable  │
-│      boho collection. Here's early access to our new arrivals..."      │
-└─────────────────────────────────────────────────────────────────────────┘
+**The Handshake:** On startup, the Cloud Run instance, acting as its assigned Service Account, has the IAM permissions to fetch the nlweb_config.yml from GCS. The NLWeb application code then parses this YAML and uses the resolve_secrets_in_config function to fetch the sensitive values directly from Secret Manager into memory, completing the secure configuration load.
+
+#### #### Simple Explanation
+
+The robot now assembles the client's personal server (Cloud Run) using the flat-pack kit from the warehouse. It attaches a note to the server that says, "Your instruction sheet is in this private folder." Crucially, it also gives the server a special keycard (a Service Account) that only works on that specific folder and the specific digital vault location mentioned in the instructions. When the server turns on for the first time, it reads the note, uses its keycard to get the instruction sheet, sees the vault location, and uses its keycard again to retrieve the secret password from the vault.
+
+### 2.4. The First Data Ingestion
+
+#### #### Technical Explanation
+
+An explicit, auditable API call triggers the initial data synchronization after the service is confirmed healthy.
+
+**Sync Endpoint (Proposed Code Change):** We will add a new, system-level endpoint to the FastAPI application in nlweb/main.py. This endpoint will be protected by IAM to ensure it can only be invoked by our Provisioning Function's identity.
+
+```python
+# Proposed endpoint in nlweb/main.py
+from fastapi import FastAPI, Request, Depends
+from some_auth_library import require_iam_permission # Pseudocode for IAM check
+
+app = FastAPI()
+# ...
+@app.post("/v1/system/trigger-initial-sync", dependencies=[Depends(require_iam_permission("run.invoker"))])
+def trigger_sync(request: Request):
+    # Assuming loaders have been initialized and attached to the app state
+    for loader_name, loader_instance in app.state.data_loaders.items():
+        print(f"Triggering initial sync for loader: {loader_name}")
+        # Consider running this in a background task for long-running jobs
+        loader_instance.load() # Calls the .load() method on ShopifyLoader, etc.
+    return {"status": "Initial sync process initiated for all configured data loaders."}
 ```
 
-#### **Instant Insights Panel**
-Additional AI-generated insights updated daily:
-- 💡 "Searches for 'coastal grandmother aesthetic' up 340% this week"
-- 📈 "Mobile visual searches peak at 2:15 PM - optimize mobile UX"
-- 🎯 "Pinterest-inspired searches have 23% higher AOV than Instagram"
-- 🔥 "Weather alert: Rainy forecast driving indoor decor searches (+67%)"
+**The Final Call:** After the Provisioning Function successfully deploys the Cloud Run service and its health checks pass, the function's final action is to make an authenticated POST request to this /v1/system/trigger-initial-sync endpoint on the newly created Cloud Run service's URL.
 
----
+#### #### Simple Explanation
 
-## 📊 2. Performance Deep Dive - Detailed Analytics
+Once the robot has built the server and confirmed it turned on correctly, it makes one final, authoritative call: "Start your first big data sync now!" This command tells the newly live server to immediately start reading all the product data from the client's Shopify store. This ensures the server is fully stocked with data and ready for the client's first query.
 
-### **Navigation Structure**
-Tab-based interface with four main sections, each with subsections:
+### 2.5. Orchestration Plane Security
 
-### **Tab 1: Search Analytics**
+#### #### Technical Explanation
 
-#### **Visual Search Trends**
-Interactive table with thumbnail previews:
+The Provisioning Cloud Function is the most privileged component in our infrastructure and must be treated as a high-value target. The following hardening strategies are mandatory.
 
-| Rank | Search Image | Query Context | Searches | Conversions | Revenue | Trend |
-|------|--------------|---------------|----------|-------------|---------|--------|
-| 1    | [Thumbnail]  | "Outfit from TikTok" | 234 | 47 (20.1%) | $7,823 | ↑45% |
-| 2    | [Thumbnail]  | "Room from Pinterest" | 189 | 31 (16.4%) | $5,422 | ↑23% |
-| 3    | [Thumbnail]  | "Style like @influencer" | 156 | 28 (17.9%) | $4,234 | NEW |
+**Trigger Security:** The Provisioning Cloud Function will be configured to allow "private" invocations only, requiring authentication. We will set its ingress settings to "Allow internal traffic only" and its trigger to be the private provisioning-requests Pub/Sub topic. The NLyzer API backend will publish to this topic, but no external service can.
 
-**Filters:**
-- Date range selector
-- Product category filter
-- Conversion rate threshold
-- Revenue impact minimum
-- Source platform (Instagram, TikTok, Pinterest, etc.)
+**Principle of Least Privilege:** The service account assigned to the Provisioning Function itself will be granted the following, highly specific IAM roles. It will not be granted basic roles like Editor or Owner.
 
-#### **Failed Searches Analysis**
-Critical for inventory optimization:
+roles/resourcemanager.projectCreator: To create the dedicated tenant GCP Project.
 
-**Couldn't Find Matches For:**
-- "Emerald green velvet sofa" - 34 searches, est. $12,000 lost revenue
-- "Minimalist desk setup" - 28 searches, est. $3,500 lost revenue
-- "Vintage brass floor lamp" - 19 searches, est. $2,800 lost revenue
+roles/billing.user: To link the new project to our master billing account.
 
-**Action Buttons:**
-- "Email this list to buying team"
-- "Create inventory alert"
-- "View similar successful searches"
+roles/iam.serviceAccountAdmin: To create, get, and set IAM policies on new tenant service accounts.
 
-#### **Search-to-Purchase Funnel**
-Visual funnel showing conversion path:
+roles/run.admin: To deploy and manage Cloud Run services within the tenant project.
 
-```
-Visual Search Initiated:     1,000 searches ████████████████████
-Results Viewed:                876 (87.6%)  █████████████████
-Product Clicked:               623 (62.3%)  ████████████
-Added to Cart:                 289 (28.9%)  █████
-Purchased:                     223 (22.3%)  ████
-
-Average Time to Purchase: 8.4 minutes
-Abandonment Points: [Detailed breakdown]
-```
+roles/compute.admin: To create GCE instances, disks, and firewall rules for Weaviate.
 
-#### **Category Performance Matrix**
-
-| Category | Visual Searches | Conversion Rate | AOV | Top Search Type |
-|----------|----------------|-----------------|-----|-----------------|
-| Furniture | 2,341 | 24.5% | $847 | Room inspiration |
-| Lighting | 1,876 | 19.8% | $234 | Specific styles |
-| Textiles | 1,654 | 21.2% | $156 | Pattern matching |
-| Decor | 1,232 | 18.7% | $89 | Color coordination |
-
-### **Tab 2: Agent Performance**
-
-#### **Visual Discovery Agent** (All tiers)
-Core metrics dashboard:
-
-**Accuracy Metrics:**
-- Overall Match Accuracy: 89.3%
-- By Category: Furniture (92%), Lighting (87%), Textiles (86%)
-- Confidence Distribution: Graph showing confidence scores
-- Processing Time: Average 1.2 seconds
-
-**Performance Trends:**
-- 30-day accuracy trend line
-- Peak usage hours heat map
-- Error rate by time of day
-- Infrastructure health indicators
-
-#### **Destination Commerce Agent** (Professional+)
-Travel and context-aware shopping metrics:
-
-**Conversion Metrics:**
-- Trip-based conversion: 35.2%
-- Average order value: $342 per trip
-- Weather accuracy impact: +23% conversion with weather data
-- Popular destinations: Miami (45), NYC (38), Austin (29)
-
-**Context Performance:**
-- Business trips: 42% conversion
-- Leisure travel: 31% conversion
-- Special events: 38% conversion
-- Seasonal correlation graph
-
-#### **Style Psychology Agent** (Professional+)
-Preference learning and personalization metrics:
-
-**Learning Effectiveness:**
-- Preference accuracy after interactions: 1st (45%), 3rd (72%), 5th (91%)
-- Repeat purchase rate: 65% within 60 days
-- Style profile distribution: Classic (34%), Trendy (28%), Minimalist (23%)
-- Confidence building impact: +2.3x customer LTV
-
-#### **Predictive Commerce Agent** (Enterprise only)
-Proactive recommendation performance:
-
-**Prediction Accuracy:**
-- Seasonal predictions: 78% accuracy
-- Size progression: 84% accuracy  
-- Reorder timing: 71% accuracy
-- Event-based: 69% accuracy
-
-**Business Impact:**
-- Proactive sales generated: $234,892
-- Inventory optimization: -23% overstock
-- Customer satisfaction: +34 NPS points
-- Reduced returns: -18%
-
-### **Tab 3: Customer Insights**
-
-#### **Behavioral Patterns**
-When and how customers use visual search:
-
-**Usage Patterns:**
-- Peak hours: 7-9 PM (34% of searches)
-- Peak days: Sunday (22%), Saturday (18%)
-- Session duration: 8.4 minutes average
-- Searches per session: 2.3
-
-**Search Behavior:**
-- First search success rate: 67%
-- Refinement patterns: Color (45%), Style (32%), Price (23%)
-- Multi-modal usage: Image only (67%), Image + text (28%), Voice + image (5%)
-
-#### **Device & Platform Analytics**
+roles/storage.admin: To create GCS buckets and upload the configuration file.
 
-```
-Device Breakdown:
-Mobile:     ████████████████ 67% (↑12% MoM)
-Desktop:    ████████ 28% (↓8% MoM)
-Tablet:     ██ 5% (→)
-
-Source Platforms:
-Instagram:  ████████████ 45%
-Pinterest:  ████████ 28%
-TikTok:     █████ 18%
-Direct:     ███ 9%
-```
+roles/secretmanager.admin: To create and manage secrets for tenant credentials.
 
-#### **Geographic Insights**
-Regional preference mapping:
-
-**Top Regions by Usage:**
-1. California: 2,341 searches (coastal, modern styles)
-2. Texas: 1,876 searches (rustic, traditional)
-3. New York: 1,654 searches (urban, minimalist)
-4. Florida: 1,232 searches (tropical, bright)
-
-**Regional Style Preferences:**
-- West Coast: Modern minimalist (67%)
-- South: Traditional comfort (54%)
-- Northeast: Urban chic (61%)
-- Midwest: Farmhouse (58%)
-
-#### **Customer Segmentation**
-AI-identified customer segments:
-
-| Segment | % of Users | Conversion | AOV | Characteristics |
-|---------|------------|-----------|-----|-----------------|
-| Style Seekers | 34% | 28.9% | $267 | Instagram-heavy, trend-focused |
-| Practical Shoppers | 28% | 19.7% | $189 | Function-first, price-sensitive |
-| Luxury Browsers | 23% | 31.2% | $567 | Quality-focused, brand-conscious |
-| Deal Hunters | 15% | 15.3% | $123 | Sale-driven, comparison shoppers |
-
-### **Tab 4: Revenue Attribution**
-
-#### **Direct Revenue Impact**
-Clear attribution for CFO/CEO approval:
-
-**This Month:**
-- Direct Visual Search Revenue: $45,892
-- % of Total Revenue: 12.3%
-- Year-over-Year Growth: +234%
-- Projected Annual: $551,000
-
-**Revenue by Source:**
-- Instagram inspiration: $18,234 (39.7%)
-- Pinterest boards: $12,456 (27.1%)
-- TikTok trends: $8,923 (19.4%)
-- Direct uploads: $6,279 (13.7%)
-
-#### **Influenced Revenue**
-Assisted conversions and multi-touch attribution:
-
-**Influenced Sales:**
-- Visual search in journey: $128,923
-- As first touchpoint: $67,234
-- As last touchpoint: $45,892
-- Multiple visual searches: $15,797
-
-#### **Average Order Value Comparison**
+roles/bigquery.dataEditor: To create the authorized BigQuery view for the tenant's analytics.
 
-```
-Visual Search Orders:    $234 average ████████████████
-Text Search Orders:      $142 average ████████
-All Orders:             $156 average ██████████
-
-Visual search drives 65% higher order values
-```
+**Code Security:** The CI/CD pipeline for the Provisioning Function will include mandatory security gates:
 
-#### **Customer Lifetime Value Impact**
+- **Mandatory Code Reviews:** A GitHub branch protection rule will require at least one approval from a designated senior engineer before code can be merged into the main branch.
 
-**Cohort Analysis:**
-- Visual search users: $892 LTV (24 months)
-- Text-only users: $423 LTV (24 months)
-- Improvement: 2.1x higher LTV
+- **Static Analysis Security Testing (SAST):** We will integrate GitHub CodeQL into the pipeline. This will automatically scan the function's code for common security vulnerabilities on every pull request. A failed scan will block the merge.
 
-**Retention Impact:**
-- 12-month retention: 67% (visual) vs 34% (text)
-- Purchase frequency: 4.2x/year vs 2.1x/year
-- Cross-category purchasing: 78% vs 23%
+- **Dependency Scanning:** We will use GitHub's Dependabot to automatically scan our requirements.txt for known vulnerabilities and create pull requests to patch them.
 
----
+#### #### Simple Explanation
 
-## 🤖 3. AI Insights & Conversational Analytics - Data Intelligence Chat
+Our master robot (the Provisioning Function) is very powerful, so we're putting it in a high-security room.
 
-### **Purpose**
-An intelligent AI assistant that has access to the client's complete NLyzer data and can answer questions conversationally, providing insights, explanations, and actionable recommendations while citing data sources.
+**Trigger Security:** The robot only responds to orders from a private, internal mailbox. No one from the outside can send it instructions.
 
-### **Chat Interface Design**
+- **Least Privilege:** Instead of a master key to the whole building, the robot has a keychain with specific keys. One key only creates new project folders, another only creates servers, and so on. If one key is stolen, the damage is limited.
 
-#### **AI Analytics Chat Widget - Moveable & Collapsible**
-Based on the Marcus Chen technical documentation interface from UX_FLOWS.md, enhanced with flexible positioning:
+- **Code Security:** Before we ever update the robot's programming, the new code must pass a mandatory inspection. An automated security scanner checks for flaws, and a senior engineer must personally sign off on the changes.
 
-**Multiple Display Modes:**
-- **Fixed Split-View (Default)**: Analytics Dashboard (70%) + AI Chat Assistant (30%)
-- **Floating Widget**: Draggable chat window overlay with resize handles
-- **Collapsed Bubble**: Minimized circular icon with notification badges
-- **Full-Screen Chat**: Expanded conversation mode with dashboard minimized
-- **Seamless Integration**: Chat references specific data points and charts visible on screen
+## 3. The Client Onboarding & Website Backend Blueprint
 
-#### **Interactive Controls & States**
+### 3.1. The Website Hosting Strategy
 
-**Widget Controls:**
-```
-┌─ AI Chat Assistant ──────────────────────────────────────┐
-│ 🤖 Data Intelligence │ [📌] [↗️] [−] [✕] │ 🔄 Auto-refresh │
-├─────────────────────────────────────────────────────────┤
-│ Control Functions:                                       │
-│ • 📌 Pin/Unpin (toggle between fixed/floating)         │
-│ • ↗️ Expand to full-screen mode                         │
-│ • − Minimize to collapsed bubble                        │
-│ • ✕ Close chat (show floating bubble on dashboard)     │
-│ • 🔄 Toggle auto-refresh of data context               │
-└─────────────────────────────────────────────────────────┘
-```
+#### #### Technical Explanation
 
-**Drag & Resize Capabilities:**
-- **Drag Handle**: Top header bar acts as drag zone
-- **Resize Corners**: Bottom-right corner drag for custom sizing
-- **Snap Zones**: Magnetic alignment to screen edges
-- **Minimum Size**: 320px × 400px for usability
-- **Maximum Size**: 80% of viewport in any dimension
+**Hosting Service:** GCP Cloud Run. The Next.js application will be containerized with a multi-stage Dockerfile that builds the application and sets up a production Node.js server.
 
-**Position Memory:**
-- Remembers last position and size per user
-- Restores preferred layout on login
-- Syncs preferences across devices
+**Network - **Configuration:**** The Cloud Run service will be fronted by a Global External HTTPS Load Balancer. This provides a single global Anycast IP address, manages our SSL certificates via Google-Managed SSL Certificates, and allows us to enable Cloud CDN on the backend service to cache static assets (_next/static/*) at Google's edge locations for optimal performance.
 
-#### **Conversational Analytics Capabilities**
+#### Simple Explanation
 
-**Responsive Interface States:**
+We will host our marketing website on GCP Cloud Run. It's like a flexible, pay-as-you-go web server that's perfect for modern Next.js sites. It's fast because it can use Google's global network to serve content from a location near the visitor, and it's cheap because we don't pay anything if nobody is visiting the site.
 
-**Split-View Mode (Default):**
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│ Analytics Dashboard (70%)        │ AI Chat Assistant (30%)         │
-│                                  │ ┌─ 🤖 Data Intelligence ───────┐ │
-│ [Dashboard charts and metrics]   │ │ [📌] [↗️] [−] [✕]            │ │
-│                                  │ ├─────────────────────────────┤ │
-│                                  │ │ Natural Language Queries:    │ │
-│                                  │ │                             │ │
-│                                  │ │ • Why did conversions drop  │ │
-│                                  │ │   last Tuesday?             │ │
-│                                  │ │ • Show revenue impact       │ │
-│                                  │ │ • Mobile vs desktop trends  │ │
-│                                  │ │                             │ │
-│                                  │ │ [💬 Ask anything...]        │ │
-│                                  │ └─────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
-```
+3.2. The Tenant Onboarding User Flow (The Forms)
+#### Technical Explanation
 
-**Floating Widget Mode:**
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│ Full Analytics Dashboard (100%)                                     │
-│                                                                     │
-│ [Dashboard charts and metrics spanning full width]                  │
-│                                                                     │
-│                          ┌─ AI Chat Assistant ─┐                  │
-│                          │ 🤖 [📌] [↗️] [−] [✕] │                  │
-│                          ├─────────────────────┤                  │
-│                          │ Draggable position  │                  │
-│                          │ Resizable corners   │                  │
-│                          │                     │                  │
-│                          │ [💬 Quick query...] │                  │
-│                          └─────────────────────┘                  │
-└─────────────────────────────────────────────────────────────────────┘
-```
+- **Create Account Page (/signup):** The user submits a form containing full_name, email, password, and company_name. On submission, the frontend makes a POST request to /api/auth/register. On success, a JWT is returned and stored in the client's local storage, and the user is programmatically redirected.
 
-**Collapsed Bubble Mode:**
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│ Full Analytics Dashboard (100%)                                     │
-│                                                                     │
-│ [Dashboard charts and metrics spanning full width]                  │
-│                                                                     │
-│                                                    ┌─ 🤖 ─┐        │
-│                                                    │ [3]  │        │
-│                                                    └──────┘        │
-│                          • Notification badge shows pending alerts │
-│                          • Click to expand to floating widget      │
-│                          • Hover shows preview of last interaction │
-└─────────────────────────────────────────────────────────────────────┘
-```
+- **Select Plan & Enter Payment Page (/subscribe):** The user selects from a list of subscription plans. The frontend initializes the Stripe.js library and mounts a Stripe Elements form for payment details. On submission, the frontend sends the chosen plan_id (e.g., price_1L2M3N...) and the payment_method_id generated by Stripe to /api/billing/create-subscription.
 
-**Full-Screen Chat Mode:**
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│ AI Data Intelligence - Full Conversation Mode                       │
-│ ┌─ Dashboard Minimized ─┐ [📊] [↙️] [−] [✕]                        │
-│ │ [Mini charts]         │                                           │
-│ └───────────────────────┘                                           │
-│                                                                     │
-│ Extended conversation area with:                                    │
-│ • Full chat history                                                 │
-│ • Advanced query builder                                            │
-│ • Data visualization tools                                          │
-│ • Export conversation options                                       │
-│                                                                     │
-│ [💬 Advanced analytics query builder...]                           │
-└─────────────────────────────────────────────────────────────────────┘
-```
+- **Connect Data Source Page (/connect):** This page uses React state to conditionally render form fields. The user first selects agent_type from a dropdown. This selection then populates the data_source_type dropdown (e.g., if agent_type is "sales_agent," data_source_type shows "shopify"). This, in turn, renders the required text inputs (shop_url, access_token). On final submission, the frontend gathers all data into a single JSON object and sends it to /api/provision/start.
 
-**Natural Language Queries:**
-- "Why did conversions drop last Tuesday?"
-- "Show me the revenue impact of visual search for fashion vs electronics"
-- "Which products are trending but have low inventory?"
-- "How does our mobile performance compare to industry benchmarks?"
-- "What's causing the spike in searches for 'sustainable fashion'?"
-
-**Data-Aware Responses with Source Linking:**
-```
-User: "Why did our conversion rate increase 15% last month?"
+- **Provisioning In Progress Page (/dashboard/pending):** This page provides immediate feedback. It displays a status message and animated spinner. The frontend polls a /api/provision/status/{tenant_id} endpoint every 15 seconds. This endpoint checks the state of the provisioning process in our database. Once the status changes to "completed," the frontend redirects to /dashboard/main.
 
-AI: Based on your data, I see three main factors:
+#### Simple Explanation
 
-1. 📈 Visual search adoption increased from 23% to 31% of total searches
-   └─ Source: Performance Deep Dive → Search Analytics Tab → Visual Search Trends
+The process is a simple, four-step journey.
 
-2. 🎯 Match accuracy improved to 91.2% (up from 87.4%)
-   └─ Source: Performance Deep Dive → Agent Performance → Visual Discovery metrics
+Create Account: You give us your name, email, and password.
 
-3. 📱 Mobile visual search grew 45% with the new voice input feature
-   └─ Source: Live View → Trending Now → Voice input usage stats
+Choose Plan: You pick a subscription plan and enter your payment details into a secure Stripe form.
 
-The biggest driver was mobile voice search - would you like me to show 
-you the mobile conversion funnel?
-```
+Connect Your Data: You tell us what kind of AI agent you want and where your data is (e.g., your Shopify store's URL and an API key).
 
-#### **Interactive Data Commands & Chat Context**
+Wait for Setup: After you click "Finish," you'll see a page that says, "We're building your instance now!" We'll send you an email the moment it's ready.
 
-**Dashboard Control Commands:**
-- **"@show mobile performance"** → Highlights mobile metrics across dashboard
-- **"@filter last 30 days"** → Applies date filter to all charts
-- **"@compare Q3 vs Q4"** → Switches to comparison view
-- **"@drill down category fashion"** → Focuses on fashion-specific data
-- **"@export revenue report"** → Generates downloadable report
+### 3.3. The Onboarding Backend (The API)
+#### Technical Explanation
 
-**Chart Interaction (Context-Aware):**
-- **Click any chart element** → AI explains what that data point means
-- **Select data range** → AI provides insights about that time period
-- **Hover over metrics** → AI shows related context and recommendations
-- **Cross-widget interaction** → Chat references dashboard changes in real-time
+These are FastAPI endpoints in our main NLyzer application, protected by JWT authentication where necessary. Pydantic models will be used for strict request validation.
 
-**Responsive Chat Behavior:**
+#### POST /api/auth/register:
 
-**Mobile Adaptation:**
-```
-📱 Mobile Layout (≤768px):
-┌─────────────────────────────┐
-│ Dashboard (Full Width)      │
-│                             │
-│ [Charts stacked vertically] │
-│                             │
-│ ┌─ 🤖 AI Chat ─────────────┐ │
-│ │ [Swipe up to expand]     │ │
-│ │ [Tap to activate voice]  │ │
-│ │ [Quick actions buttons]  │ │
-│ └─────────────────────────┘ │
-└─────────────────────────────┘
-```
+Payload (UserCreate model): full_name: str, email: EmailStr, password: str, company_name: str.
 
-**Tablet Adaptation:**
-```
-📟 Tablet Layout (768px-1024px):
-┌─────────────────────────────────────────┐
-│ Dashboard (65%)        │ AI Chat (35%)  │
-│                        │ ┌─ Collapsible ┐ │
-│ [Responsive charts]    │ │ Header       │ │
-│                        │ ├─────────────┤ │
-│                        │ │ Touch-       │ │
-│                        │ │ optimized    │ │
-│                        │ │ interface    │ │
-│                        │ └─────────────┘ │
-└─────────────────────────────────────────┘
-```
+Action: Validates the payload, hashes the password using passlib, creates a new user and a corresponding tenant record in our central PostgreSQL database, generates a JWT containing user_id and tenant_id, and returns it.
 
-**Context Persistence:**
-- Chat maintains context when switching between modes
-- Dashboard state syncs with chat references
-- Conversation history preserved across sessions
-- Smart suggestions based on current dashboard view
+#### POST /api/billing/create-subscription:
 
-#### **Smart Insights Generation**
+Payload (SubscriptionCreate model): plan_id: str, payment_method_id: str.
 
-**Proactive AI Notifications:**
-```
-🔔 AI Insight Alert
+Action: Uses the Stripe Python library to find or create a Stripe Customer associated with the user_id. It attaches the payment_method_id to the customer and creates a new Stripe Subscription with the specified plan_id. It updates the tenant's record in our database with their stripe_customer_id and sets subscription_status to "active".
 
-I noticed your visual search conversion rate in electronics dropped 8% this week, 
-but fashion increased 12%. 
+#### POST /api/provision/start:
 
-Analyzing the data, I found:
-• Electronics searches are primarily for "gaming setups" but your 
-  inventory matching for complete setups is low (67% vs 91% for individual items)
-• Fashion visual searches have shifted toward "sustainable brands" 
-  which aligns well with your new eco-friendly product line
+Payload (ProvisioningRequest model): agent_type: str, data_source_type: str, config_details: Dict[str, Any], credentials: Dict[str, str].
 
-Recommendation: Consider bundling electronics products into complete 
-setups and promoting your sustainable fashion collection in visual search results.
+Action: This is the key handshake endpoint. It retrieves the tenant_id from the authenticated JWT, constructs a JSON message that matches the format expected by our Provisioning Cloud Function, and publishes this message to the provisioning-requests GCP Pub/Sub topic. It logs the publish action and immediately returns a 202 Accepted HTTP status code to the frontend, indicating the request has been successfully queued for asynchronous processing.
 
-[View Full Analysis] [Dismiss] [Schedule Follow-up]
-```
+#### Simple Explanation
 
-**AI-Generated Reports:**
-- Weekly insights summary with key trends
-- Anomaly detection and explanation
-- Competitive analysis based on search trends
-- Seasonal forecasting with historical data
-- Custom reports based on user questions
-
-### **Data Source Integration & Transparency**
-
-#### **Real-Time Data Access Pattern**
-The AI has access to the same data powering all dashboard sections:
-
-**Live Data Sources:**
-- Real-time search feed and conversions
-- Agent performance metrics and accuracy scores  
-- Revenue attribution and ROI calculations
-- User behavior patterns and session data
-- Inventory levels and product performance
-- Competitive benchmarking data
-- Historical trends and seasonal patterns
-
-#### **Source Citation System**
-Every AI response includes clickable source references:
+Our website's backend has three main APIs.
 
-```
-📊 Data Sources for this insight:
-├─ Visual Search Trends (Performance Deep Dive → Search Analytics)
-├─ Mobile Conversion Funnel (Dashboard Overview → Hero Metrics)  
-├─ Agent Accuracy Scores (Performance Deep Dive → Agent Performance)
-└─ Revenue Attribution Model (Performance Deep Dive → Revenue Tab)
-
-[View Raw Data] [Export Sources] [Question This Analysis]
-```
+Create User API: This takes your sign-up details and creates your account.
 
-### **Advanced AI Features**
+Handle Payment API: This securely communicates with Stripe to set up your subscription plan.
 
-#### **Predictive Analytics Conversations**
-```
-User: "What should I expect for holiday shopping season?"
+Start Building API: This takes all your setup info, wraps it into a digital work order, and drops that order into a special mailbox (GCP Pub/Sub). Our provisioning robot checks this mailbox and starts building your instance.
 
-AI: Based on your historical data and current trends, here's my forecast:
+## 4. The Universal Data Ingestion Strategy
+#### Technical Explanation
 
-📈 **Expected Changes (Nov-Dec):**
-• Visual search volume: +67% (similar to last year's +71%)
-• Mobile traffic: +45% (trending higher than last year's +38%)  
-• "Gift guide" searches: Will peak Dec 15-20 based on past 3 years
+**Foundational Features (from repository analysis):**
+The core of this system is a factory pattern implemented in nlweb/data_loaders/__init__.py. The get_data_loader function in this file dynamically imports and instantiates the correct loader class based on the type key provided in the YAML configuration. My analysis of the nlweb/data_loaders/ directory confirms the following built-in loaders:
 
-🎯 **Recommendations:**
-• Increase visual search processing capacity by 60% before Nov 15
-• Prepare mobile-optimized gift guides with visual search integration
-• Stock seasonal items showing high visual search intent
+- **shopify:** Implemented in shopify_loader.py. Instantiates ShopifyLoader, which uses the Shopify Admin API to ingest product, collection, and page data. Requires a config block with shop_url and access_token.
 
-📊 **Confidence Level:** 87% based on 3 years of historical data
-└─ Source: Predictive Commerce Agent historical analysis + current trend velocity
+- **sitemap:** Implemented in sitemap_loader.py. Instantiates SitemapLoader, which fetches and parses a sitemap.xml file, then crawls the listed URLs. Requires a config block with sitemap_url.
 
-Would you like me to create an action plan with specific deadlines?
-```
+- **website:** Implemented in website_loader.py. Instantiates WebsiteLoader, which performs a basic recursive crawl of a website starting from a given base_url.
 
-#### **Competitive Intelligence Chat**
-```
-User: "How are we performing against competitors?"
+Proposed Solution (for unsupported platforms):
+The repository does not contain pre-built loaders for WooCommerce, BigCommerce, or Magento. To support these platforms, our engineering team will create new Python modules (e.g., woocommerce_loader.py) within the nlweb/data_loaders/ directory. Each new module will define a class that inherits from a common base class, implements a load() method to handle the platform-specific API interactions, and is registered in the get_data_loader factory function.
 
-AI: Here's your competitive position:
+#### Simple Explanation
 
-🏆 **Leading Areas:**
-• Visual search conversion: 22.3% vs industry avg 4.8% (+365% better)
-• Mobile visual search adoption: 67% vs industry avg 23%
-• AI agent accuracy: 91.2% vs competitor A's estimated 73%
+We ingest Shopify data using the built-in Shopify data loader. We ingest data from any standard website using the Sitemap and Website crawlers. We configure these using a simple YAML instruction file for each client. For other platforms like WooCommerce, we will build new, custom loaders that plug into the existing system.
 
-⚠️ **Growth Opportunities:**  
-• Voice search adoption: 5% vs competitor B's 12%
-• International markets: 8% vs industry avg 15%
+## 5. The Action & Tool-Using Agent Strategy (MCP Integration)
+#### Technical Explanation
 
-📊 **Market Intelligence Sources:**
-├─ Industry benchmarking reports (updated weekly)
-├─ Your performance data (real-time)
-└─ Competitive analysis (anonymized industry data)
+**Foundational Features (from repository analysis):**
+A factory in nlweb/tools/__init__.py dynamically loads tool-handling classes based on the tools configuration block in nlweb_config.yml. The LLM is then prompted to use these tools by name.
 
-Should I create a competitive strategy plan for voice search adoption?
-```
+a. Website Actions (website_action_tool): This tool enables the agent to trigger actions in the client-side NLyzer Widget. The NLWeb backend sends a JSON payload to the frontend for execution.
 
-### **Persona-Specific AI Interactions**
+Configuration (nlweb_config.yml):
 
-#### **Small Business (James Chen) - Simple & Actionable**
-```
-AI Response Style: Direct, practical, immediate actions
-
-"Your Instagram-inspired searches are up 34% this week! 
-3 quick wins:
-1. That viral TikTok outfit drove 23 searches - restock similar styles
-2. Your visual search converts 8x better on mobile - promote it more  
-3. 'Y2K fashion' searches spiked - add those tags to relevant products
-
-Want me to set up alerts for viral fashion trends?"
+```yaml
+tools:
+  - type: website_action_tool
+    config:
+      actions:
+        - name: "add_to_cart"
+          description: "Adds a specific product to the user's shopping cart. Use when the user explicitly asks to add an item."
+          js_function: "Nlyzer.addToCart(productId, quantity);"
 ```
 
-#### **Enterprise (Mike Thompson) - Strategic & Comprehensive**
+b. External Tools (api_tool): This tool allows the NLWeb backend to make server-side API calls to third-party services.
+
+Configuration (nlweb_config.yml):
+
+```yaml
+tools:
+  - type: api_tool
+    config:
+      name: "weather_api_tool"
+      description: "Gets the current weather for a given city."
+      api_url: "https://api.weather.com/v1/current?q={city}"
+      api_key: "projects/nlyzer-ops/secrets/weather-api-key/versions/latest"
 ```
-AI Response Style: Data-rich, strategic, long-term focus
 
-"I've analyzed your omnichannel visual search performance across 150 locations:
+The APITool class in nlweb/tools/api_tool.py is responsible for making the authenticated HTTP request.
 
-📊 **Regional Performance Variance:**
-• West Coast: 28.3% conversion (above chain average)
-• Midwest: 19.1% conversion (improvement opportunity)
-• Mobile adoption varies 23-67% by region
+c. Multimodality (Visual Search):
 
-🎯 **Strategic Recommendations:**
-1. Deploy successful West Coast visual search tactics to underperforming regions
-2. Implement region-specific visual search training for store associates
-3. Consider seasonal inventory allocation based on visual search trends
+Entry Point: The FastAPI server in nlweb/main.py will define an endpoint POST /v1/visual_search that accepts multipart/form-data.
 
-ROI Impact: Projected $2.3M annual revenue increase with 85% confidence.
+Mechanism: The request handler passes the image data to a nlweb/vision/processor.py module, which uses a model like CLIP to generate a vector embedding for a similarity search in Weaviate.
 
-Shall I prepare a board presentation with implementation timeline?"
-```
+#### Simple Explanation
 
----
+We can give NLWeb special abilities using tools. To add an item to a cart, we tell NLWeb what "add to cart" means, and it sends a command to our frontend widget to execute the action. To connect to a weather API, we give NLWeb the API address and a key, and it can fetch data on its own. For visual search, we have a special API endpoint where our widget can upload an image, which NLWeb analyzes and uses to find matching products.
 
-## 👁️ 4. Live View & Concierge - Real-Time Operations
+## 6. The Agent Specialization Strategy
+#### Technical Explanation
 
-### **Live Search Feed** (All tiers)
+We will create distinct "agent types" for different industries by providing a unique, curated nlweb_config.yml for each tenant based on their selection during onboarding.
 
-#### **Real-Time Search Stream**
-Scrolling feed of current visual searches:
+- **E-commerce "Sales Agent":** The nlweb_config.yml for this type will include a data_loaders entry for shopify and a tools entry for website_action_tool with add_to_cart and save_for_later actions.
 
-```
-[2:34 PM] 📱 Mobile user uploaded [bedroom inspiration photo]
-         → Matched: 4 items (92% confidence)
-         → Viewing: Coastal Nightstand ($234)
-         
-[2:33 PM] 💻 Desktop user uploaded [outfit screenshot]
-         → Matched: 6 items (87% confidence)
-         → Added to cart: 2 items ($156)
-         ✅ Converted!
-
-[2:32 PM] 📱 Mobile user uploaded [living room photo]
-         → Matched: 8 items (94% confidence)
-         → Viewing results...
-```
+- **Travel "Booking Agent":** This configuration will feature a custom api data loader for a travel Global Distribution System (GDS), an api_tool for weather checks, and a website_action_tool to pre-fill booking forms.
 
-**Display Options:**
-- Thumbnail size selector
-- Conversion events only filter
-- Platform filter (mobile/desktop)
-- Confidence threshold filter
-- Export last 100 searches
-
-#### **Trending Now Dashboard**
-Viral products and emerging trends:
-
-**🔥 Hot Right Now:**
-1. "Sage green throw pillows" - 45 searches in last hour (↑450%)
-2. "Minimalist desk lamp" - 38 searches (↑380%)
-3. "Rattan accent chair" - 31 searches (↑290%)
-
-**📈 Emerging Trends:**
-- "Dopamine decor" aesthetic emerging (89 searches today)
-- "Grandmillennial style" growing (67 searches)
-- "Japandi fusion" trend detected (45 searches)
-
-**⚡ Viral Alert:**
-- "@HomeDecorGuru posted your brass mirror - 234 searches in 30 minutes!
-- Action: Increase inventory allocation
-- Projected sales: $12,000 in next 24 hours
-
-### **Concierge Dashboard** (Enterprise only)
-
-#### **Active Concierge Sessions**
-Real-time view of human experts working with VIP customers:
-
-| Expert | Customer | Session Time | Status | Value |
-|--------|----------|--------------|--------|-------|
-| Marie S. | VIP Customer #234 | 12:34 | Styling living room | $4,500 |
-| John D. | Premium Member #567 | 8:23 | Outfit curation | $890 |
-| Lisa C. | New VIP #789 | 3:12 | Full home consultation | $12,000 |
-
-#### **Concierge Performance Metrics**
-
-**Team Performance:**
-- Average session time: 15.3 minutes
-- Conversion rate: 78.9%
-- Average order value: $3,456
-- Customer satisfaction: 4.9/5
-- Sessions today: 34
-
-**Individual Performance:**
-Leaderboard with privacy options:
-1. Marie S.: 94% conversion, $234K monthly sales
-2. John D.: 89% conversion, $198K monthly sales
-3. Lisa C.: 87% conversion, $187K monthly sales
-
-#### **Training Opportunities**
-Low-confidence matches flagged for human review:
-
-**Needs Human Touch:**
-- "Eclectic bohemian living room" - AI confidence 42%
-- "Sustainable minimalist wardrobe" - AI confidence 38%
-- "Art deco meets modern" - AI confidence 45%
-
-**Actions:**
-- Assign to expert
-- Create training data
-- Update AI model
-
-### **Competitive Intelligence** (Enterprise only)
-
-**Market Activity:**
-- Competitor A: Launched visual search (basic implementation)
-- Competitor B: 23% price drop on trending items
-- Market trend: "Quiet luxury" searches up 450% industry-wide
-
-**Your Advantage:**
-- 3.2x better conversion than Competitor A
-- 45% more accurate matching
-- 2.1x faster processing time
-
----
-
-## 🎨 5. Configuration & Appearance - Brand Control
-
-### **Widget Customization Interface**
-
-#### **Visual Designer**
-Drag-and-drop interface for brand matching:
-
-**Customizable Elements:**
-- Search bar position: Header / Floating / Embedded
-- Color scheme: Brand colors with picker
-- Icon style: Outlined / Filled / Custom
-- Animation style: Subtle / Standard / Energetic
-- Corner radius: 0-20px slider
-- Shadow depth: None / Subtle / Standard / Dramatic
-
-**Live Preview:**
-Split screen showing desktop and mobile previews with real-time updates
-
-**Preset Themes:**
-- Minimal: Clean, lots of white space
-- Boutique: Elegant with serif fonts
-- Modern: Bold colors, sans-serif
-- Luxury: Gold accents, sophisticated
-- Tech: Dark mode, futuristic
-- Custom: Start from scratch
-
-#### **Mobile Optimization Panel**
-Separate configuration for mobile experience:
-
-**Mobile-Specific Settings:**
-- Thumb-friendly sizing: 44px minimum touch targets
-- Bottom sheet vs modal selection
-- Gesture controls: Swipe to close, pinch to zoom
-- Haptic feedback: On/Off
-- Voice input prominence: Featured / Standard / Hidden
-
-### **Agent Configuration**
-
-#### **Visual Discovery Settings** (All tiers)
-
-**Matching Algorithm:**
-- Confidence threshold: [Slider: 50% - 95%] Currently: 75%
-- Color weight: [Slider: Low - High] Currently: Medium
-- Style weight: [Slider: Low - High] Currently: High
-- Pattern recognition: [On/Off] Currently: On
-
-**Category-Specific Tuning:**
-- Furniture: Prioritize shape and style
-- Clothing: Prioritize color and pattern
-- Electronics: Prioritize specifications
-- Home Decor: Balance all factors
-
-#### **Multi-Brand Support** (Professional+)
-For David Park's restaurant group scenario:
-
-**Brand Management:**
-| Brand | Theme | Search Focus | Visual Style |
-|-------|-------|--------------|--------------|
-| Pasta Palace | Warm Italian | Food photos | Rustic red |
-| Sushi Spot | Minimal Japanese | Presentation | Clean black |
-| Burger Barn | American Casual | Ingredients | Bold yellow |
-| Fine Dining | Elegant French | Ambiance | Deep blue |
-
-**Centralized Control:**
-- Global settings override
-- Brand-specific customization
-- Unified analytics view
-- Cross-brand insights
-
-### **Integration Settings**
-
-#### **API Configuration**
-```
-API Endpoint: https://api.nlyzer.ai/v2
-API Key: ••••••••••••••••••••3a4f
-Rate Limit: 1,000 requests/minute
-Current Usage: 234 requests/minute (23.4%)
-
-Webhook URL: https://yoursite.com/webhooks/nlyzer
-Events: ☑️ Search initiated ☑️ Conversion ☐ All events
-```
+- **"Documentation Agent" for a SaaS company:** This configuration will be minimalist, containing only a sitemap data loader pointing to the client's documentation site and an empty tools array.
 
-#### **Weekly Wins Email Summary**
-Automated retention and value reinforcement system:
+#### Simple Explanation
 
-**Configuration Panel:**
-```
-┌─ 📧 Weekly Wins Email Settings ─────────────────────────────────────────┐
-│                                                                         │
-│  📅 Send Schedule: Every Monday at 9:00 AM (recipient's timezone)      │
-│  📨 Recipients: emma@casamoderna.com, team@casamoderna.com             │
-│  🎯 Personalization: Emma Rodriguez (Director level messaging)         │
-│                                                                         │
-│  ✅ Enabled Features:                                                   │
-│  ☑️ Top 3 KPI highlights with visual progress bars                     │
-│  ☑️ #1 Success Story of the week (customer + revenue)                  │
-│  ☑️ #1 Inventory Opportunity with projected revenue                     │
-│  ☑️ Trending visual searches and emerging patterns                      │
-│  ☑️ Mobile vs desktop performance comparison                            │
-│  ☐ Competitive benchmarking data (Professional+ only)                  │
-│  ☐ Team usage metrics (Enterprise only)                                │
-│                                                                         │
-│  [Preview Email] [Send Test] [Edit Template] [Delivery Settings]       │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+We create specialized agents by giving them different instruction files. A Sales Agent gets an instruction file that connects to Shopify and knows how to "add to cart." A Travel Agent connects to booking systems and weather APIs. A Documentation Agent only reads help pages and has no other tools.
 
-**Email Template Preview:**
-```
-┌─ NLyzer Weekly Wins - Casa Moderna ────────────────────────────────────┐
-│                                                                         │
-│  🎯 Hi Emma,                                                            │
-│                                                                         │
-│  Your visual search engine delivered exceptional results this week!     │
-│                                                                         │
-│  ┌─ 📊 This Week's Performance ─────────────────────────────────┐       │
-│  │                                                               │       │
-│  │  💰 Revenue Impact: $12,340 (+23% vs last week)             │       │
-│  │  ████████████████████████░░░░░░░░░░░░                        │       │
-│  │                                                               │       │
-│  │  🔍 Visual Searches: 2,847 (+18% vs last week)              │       │
-│  │  ████████████████████░░░░░░░░░░░░░░░░                        │       │
-│  │                                                               │       │
-│  │  📱 Mobile Performance: 67% of searches (+12% vs last week) │       │
-│  │  ████████████████████████████████░░░░░░░░                    │       │
-│  │                                                               │       │
-│  └───────────────────────────────────────────────────────────────┘       │
-│                                                                         │
-│  🏆 SUCCESS STORY OF THE WEEK:                                          │
-│  Customer Jennifer K. used visual search to find the "perfect          │
-│  coastal living room setup" from her Pinterest board. Result:          │
-│  $3,420 order including sofa, coffee table, and accessories.           │
-│                                                                         │
-│  💡 TOP GROWTH OPPORTUNITY:                                             │
-│  "Emerald Green Velvet Chairs" - 28 searches with $8,500 missed        │
-│  revenue potential. Your buyers could capture this trend!               │
-│                                                                         │
-│  📈 TRENDING NOW:                                                       │
-│  "Dopamine decor" searches up 340% (bright, maximalist aesthetics)     │
-│                                                                         │
-│              [📊 View Your Full Dashboard]                             │
-│                                                                         │
-│  Keep up the amazing work!                                              │
-│  The NLyzer Team                                                        │
-│                                                                         │
-│  P.S. Want to discuss these results? Reply to schedule a 15-min call.  │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+## 7. The Data Intelligence & Analytics Strategy
 
-**Persona-Specific Messaging:**
-
-**Small Business (James Chen) Version:**
-- Subject: "Thread Theory Weekly Wins: +$3,240 and viral TikTok trend spotted!"
-- Focus: Simple metrics, social media trends, actionable insights
-- CTA: Single button to dashboard, emphasis on mobile-friendly
-
-**Enterprise (Mike Thompson) Version:**
-- Subject: "AllSport Weekly Intelligence: Omnichannel performance & market insights"
-- Focus: Strategic insights, regional performance, competitive intelligence
-- CTA: Executive summary download + full dashboard access
-
-**Mid-Market (Emma Rodriguez) Version:**
-- Subject: "Casa Moderna Weekly Wins: +$12,340 in revenue and 2 new trends"
-- Focus: ROI metrics, inventory opportunities, team insights
-- CTA: Dashboard access + optional team sharing
-
-#### **Analytics Integration**
-Pre-built connectors:
-- ✅ Google Analytics 4 (Connected)
-- ⚙️ Adobe Analytics (Configure)
-- ⚙️ Segment (Configure)
-- ⚙️ Mixpanel (Configure)
-- + Add custom integration
-
-#### **E-commerce Platform Sync**
-- Platform: Shopify Plus ✅
-- Sync frequency: Real-time
-- Last sync: 2 minutes ago
-- Products synced: 15,234/15,234
-- Sync status: Healthy 🟢
-
-### **White-Label Options** (Enterprise only)
-
-#### **Branding Removal**
-- ☑️ Remove NLyzer branding from widget
-- ☑️ Custom loading animations
-- ☑️ Branded email notifications
-- ☑️ White-label API domain
-
-**Custom Domain Setup:**
-```
-Your domain: visual-search.yourcompany.com
-SSL: ✅ Active
-CDN: ✅ Configured
-Status: 🟢 Live
-```
+### 7.1. The BI Data Pipeline Foundation
+#### Technical Explanation
 
-#### **Co-Branding Options**
-- Powered by [Your Company] with NLyzer technology
-- Joint case studies publication rights
-- Co-marketing opportunities
-- Shared PR announcements
+- **Structured Logging:** Both the NLWeb backend and the frontend NLyzer Widget will be instrumented to log key events as structured JSON objects to stdout.
 
----
+- **Log Ingestion:** GCP Cloud Logging automatically captures all stdout streams from every tenant's Cloud Run instance.
 
-## 💳 6. Billing & Usage - Transparent Pricing
+- **Data Routing:** A Log Sink is configured in Cloud Logging to filter for our specific JSON logs (e.g., jsonPayload.event IS NOT NULL). It forwards these logs to a central Google Pub/Sub topic in our main operations project.
 
-### **Usage Dashboard**
+- **Data - **Pipeline:**** A Dataflow job (Streaming) subscribes to the Pub/Sub topic. It performs validation, schema enforcement, and minor transformations before streaming the data into our central BigQuery data warehouse. The data will be stored in a single table, partitioned by timestamp and clustered by tenant_id.
 
-#### **Current Month Overview**
-Visual thermometer showing usage:
+#### Simple Explanation
 
-```
-Visual Searches Used This Month
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-████████████████░░░░░░░  7,234 / 10,000 (72.3%)
-                         
-12 days remaining in billing period
-Projected total: 9,234 searches (within limit ✅)
-
-💡 Tip: You're on track. Consider upgrading next month for 25% more searches.
-```
+Our data strategy is our secret sauce. First, we set up a pipeline: every important user click becomes a structured log message. These logs are automatically collected by GCP, filtered, and sent to BigQuery, our master analytics database.
 
-#### **Usage Breakdown**
-Detailed usage analytics:
+### 7.2. The Expanded Event Schema
+#### Technical Explanation
 
-**By Search Type:**
-- Image upload: 4,234 (58.5%)
-- Image + text: 2,123 (29.3%)
-- Voice + image: 534 (7.4%)
-- API calls: 343 (4.7%)
+Each event includes tenant_id, session_id, user_id, and timestamp.
 
-**By Time Period:**
-- Week 1: 1,234 searches
-- Week 2: 2,456 searches
-- Week 3: 2,890 searches (current)
-- Week 4: Projected 2,654
+- **session_start:** Triggered by the widget on load. Payload: { "device_type", "browser", "initial_url" }.
 
-### **Plan Comparison**
-Encourage upgrades with clear value:
+- **query_received:** Triggered by the backend. Payload: { "user_query", "query_type": "text|visual" }.
 
-**Your Current Plan: Professional ($99/month)**
-```
-Included:
-✅ 10,000 searches/month
-✅ 3 AI agents
-✅ Email support
-✅ API access
-
-Missing out on:
-❌ Unlimited searches
-❌ Predictive Commerce agent  
-❌ Phone support
-❌ White-label options
-❌ Dedicated CSM
-```
+- **query_refinement:** Triggered by the widget on filter/sort. Payload: { "refinement_type", "refinement_key", "refinement_value" }.
+
+- **product_view:** Triggered by the widget on product click. Payload: { "product_id", "source_query", "result_rank" }.
+
+- **tool_executed:** Triggered by the backend when an action is taken. Payload: { "tool_name", "action_name", "parameters" }.
+
+- **null_search_result:** Triggered by the backend on zero results. Payload: { "query" }.
+
+- **feedback_provided:** Triggered by the widget on feedback click. Payload: { "rating": "positive|negative", "source_query", "llm_response" }.
+
+#### Simple Explanation
+
+We log every important customer action as a unique event. We log when a customer starts a session, when they refine a search, when they view a product, and when they add to cart. We also make a special note of any unanswered questions.
+
+### 7.3. Advanced KPIs and Actionable Insights
+#### Technical Explanation
+
+- **Search Funnel Drop-off Analysis:** A funnel chart visualizing the percentage drop-off between query_received -> product_view -> tool_executed events.
+
+- **Content Gap Analysis:** A table of the top queries from null_search_result events.
+
+- **Highest Converting Search Paths:** A pathing analysis query in BigQuery to identify the most frequent sequences of query_received and query_refinement events that lead to a tool_executed event within the same session.
+
+- **Most Effective Refinements:** A table showing the refinement_key and refinement_value pairs with the highest correlation to conversion events.
+
+- **AI Interaction Quality Score:** A gauge chart showing (positive_ratings / total_ratings) * 100.
+
+#### Simple Explanation
+
+We will build powerful new dashboard widgets. One will show a funnel illustrating where customers drop off. Another will be a list of "Top Unanswered Questions." A third will reveal the "Golden Paths"—the exact sequence of searches and filters that lead to the most sales.
+
+### 7.4. The 'Data Analyst Chat Box' Architecture
+#### Technical Explanation
+
+**The Authorized View Model:** During provisioning, our Cloud Function will execute a DDL query to create a tenant-specific, authorized BigQuery view.
+
+Example DDL command for tenant 'acme-corp-456':
 
-**Upgrade to Enterprise:**
-- Unlock Predictive Commerce (+$45K annual revenue projected)
-- Dedicated customer success manager
-- Custom integration support
-- Co-marketing opportunities
-- Volume pricing available
-
-**ROI Calculator for Upgrade:**
-- Additional cost: $400/month
-- Projected revenue increase: $4,500/month
-- ROI: 11.25x
-- [Upgrade Now] [Talk to Sales]
-
-### **Invoice History**
-
-#### **Recent Invoices**
-Clean, downloadable records:
-
-| Date | Invoice # | Period | Amount | Status | Actions |
-|------|-----------|--------|--------|--------|---------|
-| Oct 1 | INV-2024-1234 | September | $99.00 | Paid ✅ | [Download] [Receipt] |
-| Sep 1 | INV-2024-1123 | August | $99.00 | Paid ✅ | [Download] [Receipt] |
-| Aug 1 | INV-2024-1012 | July | $124.50* | Paid ✅ | [Download] [Receipt] |
-
-*Included $25.50 overage for 2,550 additional searches
-
-#### **Annual Summary**
-For budgeting and finance teams:
-
-**2024 Year to Date:**
-- Total spent: $891.50
-- Total searches: 72,345
-- Average cost per search: $0.012
-- ROI: 34.2x (based on attributed revenue)
-
-**Export Options:**
-- [Download CSV] [Download PDF] [Email to Finance]
-
-### **Team Usage** (Professional+)
-
-#### **Multi-Location Breakdown**
-For Mike Thompson's sporting goods chain:
-
-| Location | Searches | Conversion | Revenue | Cost |
-|----------|----------|------------|---------|------|
-| Denver HQ | 2,341 | 24.5% | $45,234 | $23.41 |
-| Store #1 | 1,876 | 21.2% | $34,567 | $18.76 |
-| Store #2 | 1,232 | 19.8% | $23,456 | $12.32 |
-| Online | 3,456 | 26.7% | $67,890 | $34.56 |
-
-**Department Allocation:**
-- E-commerce team: 45%
-- Store associates: 35%
-- Marketing: 15%
-- Customer service: 5%
-
----
-
-## 📚 7. Help & Documentation - Self-Service Success
-
-### **Quick Start Guides**
-Industry-specific onboarding:
-
-#### **Fashion Retailers**
-"From Instagram to Sales in 5 Minutes"
-1. Install widget (2 min) 
-2. Configure brand colors (1 min)
-3. Test with team (1 min)
-4. Go live (1 min)
-[Watch Video] [Download PDF]
-
-#### **Home Decor Stores**
-"Pinterest to Purchase Setup"
-1. Connect product catalog
-2. Set up room categories
-3. Configure style matching
-4. Launch to customers
-[Interactive Tutorial]
-
-#### **Hotels & Hospitality**
-"Visual Booking Engine Guide"
-1. Map room types
-2. Upload room photos
-3. Set availability rules
-4. Enable on booking page
-[Step-by-Step Guide]
-
-#### **Restaurants**
-"Menu Visual Search Setup"
-1. Upload menu photos
-2. Tag dietary options
-3. Set portion sizes
-4. Configure locations
-[Video Walkthrough]
-
-### **Knowledge Base**
-
-#### **Search Functionality**
-Smart search with suggested articles:
+```sql
+CREATE VIEW `nlyzer-ops-project.tenant_views.vw_acme_corp_456` AS
+SELECT *
+FROM `nlyzer-ops-project.analytics.events`
+WHERE tenant_id = 'acme-corp-456';
 ```
-🔍 Search: "confidence threshold"
-
-Suggested Articles:
-📄 Adjusting Confidence Thresholds for Better Matches
-📄 Category-Specific Confidence Settings
-📄 Troubleshooting Low Confidence Scores
-📄 When to Use Human Concierge Fallback
+
+**IAM Enforcement:** The service account used by our "Data Analyst Chat Box" API (sa-analytics-agent@...) will have NO permissions on the underlying analytics.events table. Instead, it will be granted the roles/bigquery.dataViewer permission only on the specific tenant's view.
+
+**Agent Invocation:** The backend invokes the LLM with a prompt like: "You are a helpful data analyst. You can query the BigQuery view named vw_acme_corp_456 to answer questions."
+
+**Secure Execution:** The LLM generates a SQL query against the view. Because the agent's identity physically cannot see any other view or the master table, it is impossible for it to leak data, even if the generated SQL were faulty.
+
+#### Simple Explanation
+
+To prevent our Data Analyst Chat Box from ever mixing up client data, we build them a private, sealed library room (an Authorized View) that only contains their books. We then give our Data Analyst AI a key that only opens that specific room. It's now physically impossible for the AI to access the wrong client's data.
+
+## 8. The Frontend Component Architecture
+#### Technical Explanation
+
+**Tech Stack:** Next.js (with React).
+
+**Componentization Plan (Atomic Design):** The src/components/ directory will be structured into:
+
+- **atoms/:** Button.tsx, Input.tsx, Spinner.tsx, Badge.tsx, Icon.tsx.
+
+- **molecules/:** SearchBar.tsx, ProductCard.tsx, RangeSlider.tsx, ImageUploader.tsx.
+
+- **organisms/:** ProductGrid.tsx, FilterSidebar.tsx, ProductDetailModal.tsx, ChatInterface.tsx.
+
+**State Management Strategy:** Zustand. A central store (src/store/widgetStore.ts) will manage global widget state like isWidgetOpen, chatHistory, searchResults, and isLoading, while component-local state will use React's useState.
+
+#### Simple Explanation
+
+We will build our customer-facing NLyzer Widget using Next.js and React. We will organize our code using Atomic Design, starting with small "atoms" like buttons, combining them into "molecules" like a search bar, and assembling those into "organisms" like a complete product grid. To manage the widget's memory, we will use Zustand, a lightweight tool that acts as the widget's central brain.
+
+## 9. The Operational & Security Hardening Plan
+
+### 9.1. Observability & Monitoring Strategy
+#### Technical Explanation
+
+- **Core Services:** Google Cloud Monitoring and Cloud Logging.
+
+- **Dashboards:** Each tenant's GCP Project will have a pre-configured Cloud Monitoring Dashboard visualizing key per-resource metrics.
+
+- **Metrics to Track:** run.googleapis.com/request_latencies (p95, p99), run.googleapis.com/container/cpu/utilization, logging.googleapis.com/log_entry_count (filtered for severity=ERROR), compute.googleapis.com/instance/cpu/utilization, and compute.googleapis.com/instance/disk/used_bytes.
+
+- **Alerting:** Cloud Monitoring Alerting Policies will be configured in a central operations project to monitor all tenant projects for thresholds (e.g., p99 latency > 2s, CPU > 80% for 15 mins, Disk > 90%) and route alerts to PagerDuty.
+
+#### Simple Explanation
+
+We will install security cameras and alarm systems for every client's server and database. We'll have a central security room (Google Cloud Monitoring) with a dedicated TV screen (Dashboard) for each client. If a server is running too slow or its hard drive is getting full, an alarm bell (Cloud Alerting) will automatically ring in our SRE team's office.
+
+### 9.2. Database Management Strategy
+#### Technical Explanation
+
+- **Schema Migrations:** We will version the Weaviate schema. Idempotent Python migration scripts will be written for any change and run via a centrally managed job during maintenance windows.
+
+- **Backup and Disaster Recovery (DR):** We will use GCP Persistent Disk Snapshots with a Resource Policy to automate daily snapshots (retained for 7 days) and weekly snapshots (retained for 4 weeks). The DR plan involves provisioning a new GCE instance from the latest stable snapshot and updating the Cloud Run service's WEAVIATE_URL environment variable.
+
+#### Simple Explanation
+
+For our databases, we have a clear plan. For updates, we have a special tool that carefully applies required changes. For safety, we take an automatic photocopy (Snapshot) of every client's database every single night. If a database ever breaks, we can fire up a new one from last night's copy in minutes.
+
+### 9.3. CI/CD & Safe Deployment Strategy
+#### Technical Explanation
+
+- **Pipeline:** A GitHub Actions workflow (.github/workflows/deploy.yml) will define multiple, independent jobs. Each job will be responsible for a specific component (e.g., the API, the NLWeb image) and will only run if files in its designated path have been modified.
+
+Path-Based Trigger Logic (deploy.yml example):
+
+```yaml
+name: NLyzer CI/CD Pipeline
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'nlyzer_api/**'
+      - 'nlweb/**'
+      - 'nlyzer_website/**'
+jobs:
+  deploy-api:
+    if: "contains(toJSON(github.event.commits), 'nlyzer_api/')"
+    # ...
+  deploy-nlweb-image:
+    if: "contains(toJSON(github.event.commits), 'nlweb/')"
+    # ...
 ```
+
+- **Progressive Delivery:** The deploy-nlweb-image job builds and pushes the new version-tagged image. The actual rollout to tenants remains a separate, manually-triggered workflow that allows an SRE to select the image tag to deploy, preserving the safety of the Canary/Bake/Promote process.
+
+#### Simple Explanation
+
+Our software assembly line (CI/CD pipeline) is now much smarter. If a developer only changes the website code, only the website crew is activated. The API and NLWeb engine crews don't get called. This path-based system saves time, reduces risk, and lets us deliver updates much more efficiently.
+
+### 9.4. Cost Management & Resource Guardrails
+#### Technical Explanation
+
+- **Cost Controls:** Our Provisioning Function will create a GCP Budget with alert thresholds (50%, 90%, 100%) for each new tenant project.
+
+- **Rate Limiting (Proposed Code Change):** We will implement application-level rate limiting on expensive LLM calls within the NLWeb backend. A tenant_id-based in-memory store will track request counts against plan limits. If a tenant exceeds their quota, the API will return an HTTP 429 Too Many Requests error.
+
+#### Simple Explanation
 
-#### **Popular Articles**
-1. "Maximizing ROI with Visual Search" (2,341 views)
-2. "Mobile Optimization Best Practices" (1,876 views)
-3. "Understanding Your Analytics Dashboard" (1,543 views)
-4. "API Integration Guide" (1,234 views)
-5. "Handling Peak Traffic" (987 views)
-
-#### **Video Library**
-- Getting Started (5 min)
-- Advanced Configuration (12 min)
-- Analytics Deep Dive (18 min)
-- API Integration (15 min)
-- Success Stories (10 min)
-
-### **Support Center**
-
-#### **Tier-Appropriate Support**
-
-**Starter Tier:**
-- 📧 Email support (24-hour response)
-- 📚 Knowledge base access
-- 🤖 AI chatbot assistance
-- 📹 Video tutorials
-
-**Professional Tier:**
-- 📧 Priority email (4-hour response)
-- 💬 Live chat (business hours)
-- 📞 Callback scheduling
-- 🎯 Onboarding specialist
-
-**Enterprise Tier:**
-- 📞 24/7 phone support
-- 👤 Dedicated CSM
-- 🚀 Launch planning
-- 📊 Quarterly reviews
-
-#### **Support Ticket System**
-Simple ticket creation:
+To control costs, we put a spending limit on the credit card for each client's project. We set an alarm to go off if the spending gets too high. Most importantly, since the AI's "thinking" is expensive, we build a fuse box into our NLWeb software. Each client gets a certain number of AI requests per day based on their plan. If they exceed that limit, the fuse for that service blows.
+
+### 9.5. Network & Infrastructure Security
+#### Technical Explanation
+
+- **Network Design:** A Shared VPC model where the NLyzer operations project is the "host" and tenant projects are "service projects."
+
+- **Tenant Isolation:** VPC Firewall Rules will be used with network tags. A db-{tenant_id} tag on the GCE instance and a run-{tenant_id} tag on the Cloud Run service will be used to create an ingress rule that allows traffic on the database port only if the source and destination tags match. A default-deny egress rule will prevent databases from initiating outbound connections.
+
+- **External Threat Protection:** A Global External HTTPS Load Balancer will route all traffic. A Google Cloud Armor security policy will be attached to it with pre-configured WAF rules to mitigate the OWASP Top 10 and provide DDoS protection.
+
+#### Simple Explanation
+
+We build our entire service inside a secure digital fortress. Each client gets their own private, high-walled room (firewall rules) inside. The rules state that the server in a room can only talk to the database in that same room. All visitor traffic must pass through a heavily guarded main gate (Load Balancer with Cloud Armor), where security guards check for any known threats.
+
+## 10. Development & Contribution Policies
+
+### 10.1. Upstream Maintenance for NLWeb Fork
+#### Technical Explanation
+
+1. Git Remote - **Configuration:**
+Every developer working on our core NLWeb extension must configure their local repository with an upstream remote that points to the official open-source project.
+
+```bash
+git remote add upstream https://github.com/nlweb-ai/NLWeb.git
+git remote -v
 ```
-Create New Ticket
-━━━━━━━━━━━━━━━━
-Category: [Technical Issue ▼]
-Priority: [High ▼]
-Subject: [Widget not loading on mobile]
-Description: [Detailed text area]
-
-Attachments: [Drop files or screenshots]
-Expected response: Within 4 hours
-
-[Submit Ticket] [Save Draft]
+
+2. Update Cadence & Process:
+On the first Monday of each quarter, the designated Lead Engineer will perform the upstream sync.
+
+```bash
+git checkout main
+git pull origin main
+git fetch upstream
+git merge upstream/main --no-ff
 ```
+
+3. Conflict Resolution & Testing:
+
+Merge conflicts will be resolved locally, prioritizing upstream changes unless they directly conflict with our proprietary extensions.
+
+After resolving conflicts, the code must be pushed to a feature branch (e.g., feature/upstream-sync-q3-2025), not directly to main.
+
+A pull request from this branch will trigger our full CI/CD pipeline, including all tests. The PR requires review and approval before being merged.
+
+#### Simple Explanation
+
+Our NLyzer engine is built using an open-source engine block from another company. To make sure we always have their latest safety features and performance improvements, we have a formal maintenance schedule.
+
+- **Configuration:** We've programmed our mechanics' tools to know the address of the original engine factory.
+
+- **Schedule:** Every three months, our lead mechanic connects to the factory to download their latest blueprints and parts.
 
-### **Success Resources**
-
-#### **ROI Calculator Template**
-Downloadable Excel template:
-- Input your metrics
-- Calculate visual search ROI
-- Create board presentation
-- Project future impact
-[Download Template]
-
-#### **Board Presentation Deck**
-Professional PowerPoint template:
-- Executive summary slide
-- ROI metrics visualization
-- Competitive advantage
-- Future roadmap
-- Budget justification
-[Download Deck]
-
-#### **Customer Success Stories**
-Relevant case studies by industry:
-
-**Fashion:** "How ThreadTheory Increased Conversion 340%"
-**Home Decor:** "Casa Moderna's $500K Visual Search Success"
-**Hotels:** "Sunset Hospitality's Booking Revolution"
-**Enterprise:** "AllSport's Omnichannel Transformation"
-
-#### **Integration Playbooks**
-Platform-specific guides:
-- Shopify Plus Integration Playbook
-- BigCommerce Setup Guide
-- Custom Platform API Guide
-- Mobile App SDK Documentation
-
-### **Developer Resources** (For CTOs like David Park)
-
-#### **API Documentation**
-- RESTful API reference
-- GraphQL schema
-- Webhook events
-- Rate limiting
-- Authentication
-- Code examples (Python, JavaScript, Ruby, PHP)
-
-#### **SDKs & Libraries**
-- JavaScript SDK
-- React components
-- iOS SDK
-- Android SDK
-- Server-side libraries
-
-#### **Testing Tools**
-- API sandbox environment
-- Test image library
-- Webhook testing tool
-- Performance benchmarks
-
----
-
-## 🎯 Dashboard Personalization
-
-### **Persona-Based Defaults**
-
-#### **Small Business (James Chen)**
-- Mobile-first layout
-- Simple metrics only
-- Instagram integration prominent
-- Weekly email summaries default
-- Quick wins emphasized
-
-#### **Mid-Market (Emma Rodriguez)**
-- Balanced dashboard
-- ROI tracking featured
-- Team performance visible
-- Integration health priority
-- Competitive benchmarks
-
-#### **Enterprise (Mike Thompson)**
-- Executive summary default
-- Multi-location views
-- Compliance reporting
-- Strategic insights
-- Board-ready exports
-
-#### **Technical (David Park)**
-- API metrics featured
-- System health priority
-- Developer resources
-- Technical logs access
-- Performance monitoring
-
-### **Customization Options**
-
-**Widget Arrangement:**
-- Drag-and-drop dashboard customization
-- Save multiple dashboard views
-- Quick view switching
-- Mobile-specific layouts
-
-**Metric Selection:**
-- Choose which metrics to display
-- Set custom KPI targets
-- Create calculated metrics
-- Alert thresholds
-
-**Branding:**
-- Upload company logo
-- Set brand colors
-- Custom terminology
-- Localization options
-
----
-
-## 📱 Mobile Dashboard Experience
-
-### **Responsive Design Principles**
-- Thumb-friendly navigation
-- Swipe between sections
-- Pull-to-refresh data
-- Offline capability
-- Biometric authentication
-
-### **Mobile-Optimized Views**
-- Simplified metrics
-- Vertical card layout
-- Expandable sections
-- Quick actions menu
-- Voice notes support
-
-### **Mobile-Specific Features**
-- Push notifications for alerts
-- Apple Watch companion metrics
-- Share screenshots easily
-- Quick team communication
-- Location-based insights
-
----
-
-## 🔐 Security & Compliance
-
-### **Data Protection**
-- SOC 2 Type II certified
-- GDPR compliant
-- CCPA compliant
-- PCI DSS for payments
-- Data encryption at rest
-
-### **Access Control**
-- Role-based permissions
-- SSO integration
-- 2FA required
-- IP allowlisting
-- Audit logs
-
-### **Compliance Reporting**
-- Data processing records
-- Access audit trails
-- Compliance certificates
-- Privacy policy tools
-- Data export tools
-
----
-
-This comprehensive dashboard specification provides a complete blueprint for building NLyzer's B2B interface, addressing the specific needs of all 8 personas while maintaining scalability and ease of use.
+- **Safe Installation:** They carefully merge these new parts with our own custom modifications on a test engine. This test engine goes through rigorous quality checks. Only after it passes every single test do we approve the changes and update the engines used in our production service.
