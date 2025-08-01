@@ -367,21 +367,28 @@ nlyzer/
     └── admin_dashboard.py
 ```
 
-## 🛠️ Development
+## 🛠️ Development Environment
 
-### Install Dependencies
+This project uses Docker and Docker Compose to manage a consistent, multi-service local development environment.
+
+### Prerequisites
+- Docker Desktop must be installed and running.
+- A `.env` file must be created from the `.env.template` with the necessary secrets.
+
+### Running the Application
+To build the Docker images and start all services (FastAPI, PostgreSQL, Redis, Qdrant), run the following command from the project root:
+
 ```bash
-pip install -r requirements.txt
+docker-compose up --build
 ```
 
-### Run Local Dev Server
-```bash
-uvicorn nlyzer.main:app --reload --port 8000
-```
+The API will be available at http://127.0.0.1:8000, and it supports hot-reloading for the nlyzer/ directory.
 
-### Run Tests
+### Running Tests
+To run the test suite, execute the following command in a separate terminal:
+
 ```bash
-pytest
+docker-compose exec api pytest -v
 ```
 
 ## 📋 Operational Reality Checklist
