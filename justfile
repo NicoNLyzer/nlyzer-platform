@@ -85,6 +85,13 @@ deps:
     docker-compose run --rm nlyzer-api poetry install
     docker-compose run --rm nlweb-extension poetry install
 
+# --- Debugging ---
+# Get an interactive shell inside a running service container
+# Usage: just shell nlyzer-api
+shell service:
+    @echo "Opening shell in service: {{service}}..."
+    docker-compose exec {{service}} bash
+
 # Access the API shell
 shell-api:
     docker-compose exec nlyzer-api /bin/bash

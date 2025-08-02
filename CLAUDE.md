@@ -35,22 +35,38 @@
 
 ---
 
-## 4. Code Style & Patterns (MANDATORY)
+## 4. Development Environment & Commands
+
+-   **Dependency Management:** **CRITICAL** - Poetry is the ONLY tool for dependency management. NEVER use pip directly or create requirements.txt files. All dependencies MUST be declared in `pyproject.toml` files.
+-   **Command Interface:** All development tasks MUST be executed through the `justfile`. Use `just --list` to see available commands.
+-   **Essential Commands:**
+    -   `just` - Build and start all services
+    -   `just format` - Format all Python code with Ruff (MANDATORY before commits)
+    -   `just lint` - Lint all Python code with Ruff
+    -   `just test` - Run all tests
+    -   `just migrate-up` - Apply database migrations
+    -   `just shell nlyzer-api` - Access service container shell for debugging
+
+---
+
+## 5. Code Style & Patterns (MANDATORY)
 
 -   **Typing & Docstrings:** **YOU MUST** use Python type hints for all function signatures and Google-style docstrings for all public functions.
+-   **Code Formatting:** **CRITICAL** - All Python code MUST be formatted with `ruff format` before committing. Run `just format` to format all code. Code that is not properly formatted will be rejected.
+-   **Linting:** All code MUST pass Ruff linting checks. Run `just lint` to check compliance. Use `just lint-fix` to auto-fix issues where possible.
 -   **Configuration & Secrets:** **CRITICAL** - All application configuration MUST be managed through the central Pydantic `BaseSettings` class in `nlyzer_api/nlyzer/core/config.py`. All secrets are loaded from the `.env` file. NEVER access `os.getenv()` directly in application logic.
 -   **Logging:** Use Python's built-in `logging` module. Do not use `print()` statements in application code.
 
 ---
 
-## 5. The NLyzer Knowledge Library
+## 6. The NLyzer Knowledge Library
 
 -   I maintain an extensive, up-to-date, local documentation library at `NLyzer-Documentation-Library/`. This is our ultimate source of truth for all third-party integrations.
 -   **DO NOT GUESS.** If you need a specific implementation detail for any service (e.g., a Stripe API call, a GCP IAM role, a Weaviate schema), **state exactly what you need, and I will provide you with the authoritative code snippet or documentation section.**
 
 ---
 
-## 6. Testing Protocol
+## 7. Testing Protocol
 
 -   **Framework:** We use `pytest`.
 -   **Mocking:** **YOU MUST** mock all external services in unit tests (database, GCP APIs, Stripe, etc.). Use `pytest.monkeypatch` or `unittest.mock`.
