@@ -15,6 +15,7 @@
 -   **The Single Source of Truth:** All architectural decisions are defined in `docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md`. All prompts and generated code MUST align with this master plan.
 -   **Primary Tech Stack:** Our complete, up-to-date technology stack is defined in the `docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md`. All Python code is async FastAPI on Python 3.10+. All infrastructure is GCP.
 -   **Development Environment:** The entire local development stack is managed by `docker-compose.yml`. All commands should be assumed to run within or via Docker.
+-   **Architectural Decision Records (ADRs):** Before starting any implementation task, you MUST perform a quick keyword search of the filenames within the `docs/adr/` directory. If a relevant ADR exists (e.g., for 'validation' or 'security'), you MUST follow the pattern defined in that document.
 
 ---
 
