@@ -18,6 +18,47 @@ This document provides the complete, prompt-level implementation guide for the N
 - **Git-Flow Mandatory**: All work done in feature branches with proper merging
 - **Security-First**: Every endpoint and function designed with security as priority one
 - **Infrastructure as Code**: Complete automation of all GCP resources
+- **Documentation-Driven**: Every prompt must reference the NLyzer Documentation Library
+- **CHANGELOG Mandatory**: Every step must update CHANGELOG.md with completion details
+
+## AI-PM Prompt Template
+
+Every prompt in this plan follows this standardized template to ensure comprehensive documentation review and proper change tracking:
+
+```
+**AI-PM Prompt Template:**
+```
+Before implementing [TASK_NAME], thoroughly study the relevant documentation:
+
+Required Reading:
+1. Read README.md - understand the complete NLyzer platform architecture
+2. Read CLAUDE.md - understand development directives and patterns
+3. Read docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md - understand technical architecture
+4. Read docs/NLYZER_MVP_EXECUTION_PLAN.md - understand sprint context
+5. Read [SPECIFIC_DOCS] - understand task-specific requirements
+6. Read NLyzer-Documentation-Library/[RELEVANT_SECTIONS] - understand implementation patterns
+
+Task: [SPECIFIC_TASK_DESCRIPTION]
+
+Critical Requirements:
+- [SECURITY_REQUIREMENTS from OWASP/compliance docs]
+- [PERFORMANCE_REQUIREMENTS from architecture]
+- [BUSINESS_REQUIREMENTS from README/MVP plan]
+
+Implementation Requirements:
+- Follow TDD approach (mandatory per CLAUDE.md)
+- Implement async patterns throughout
+- Follow security best practices
+- Include comprehensive error handling
+- [TASK_SPECIFIC_REQUIREMENTS]
+
+After completion, update CHANGELOG.md with:
+### [STEP_NUMBER] - [TASK_NAME]
+- [SPECIFIC_DELIVERABLE_1]
+- [SPECIFIC_DELIVERABLE_2]
+- [SECURITY_ENHANCEMENT]
+- [PERFORMANCE_IMPROVEMENT]
+```
 
 ---
 
@@ -96,12 +137,29 @@ LOG_LEVEL=DEBUG
 
 **AI-PM Prompt**: 
 ```
-Create the sprint branch for Sprint 1. Follow the Git-Flow pattern established in our workflow.
+You are starting Sprint 1 of the NLyzer MVP implementation. Before beginning, read and understand the foundational documentation:
+
+Required Reading:
+1. Read README.md - understand the complete NLyzer platform architecture and goals
+2. Read CLAUDE.md - understand all development directives, patterns, and requirements
+3. Read docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md - understand the technical architecture
+4. Read docs/NLYZER_MVP_EXECUTION_PLAN.md - understand the sprint structure and deliverables
+5. Read NLyzer-Documentation-Library/03_Backend_Framework/fastapi/README.md - understand FastAPI patterns
+6. Read NLyzer-Documentation-Library/00_Security_And_Compliance/OWASP_Top_10/README.md - understand security requirements
+
+Task: Create the sprint branch for Sprint 1 following our Git-Flow pattern.
 
 Requirements:
 - Create feature branch: sprint-1-secure-foundation
 - Ensure branch is based on latest main
 - Push branch to origin
+- Update CHANGELOG.md with Sprint 1 start entry
+
+After completion, update CHANGELOG.md with:
+## [Sprint 1] - The Secure Foundation - (Commit: `<commit-hash>`)
+### [1.1] - Git Branch Creation and Sprint Setup
+- Created feature branch: sprint-1-secure-foundation
+- Established development environment for secure foundation sprint
 ```
 
 **Expected Actions**:
@@ -134,20 +192,44 @@ Requirements:
 
 **AI-PM Prompt**: 
 ```
-Review and enhance the Docker development environment. Ensure we have a complete multi-service setup that matches the architectural blueprint.
+Before implementing the Docker development environment, read the foundational documentation:
+
+Required Reading:
+1. Read README.md - understand the development environment requirements
+2. Read CLAUDE.md - understand Docker and Poetry requirements (Section 2)
+3. Read docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md - understand the service architecture
+4. Read NLyzer-Documentation-Library/07_Tooling_And_Deployment/docker-awesome-compose/README.md - understand Docker Compose patterns
+5. Read NLyzer-Documentation-Library/01_Core_Engine/NLWeb/docker-compose.yaml - understand NLWeb's Docker setup
+6. Read NLyzer-Documentation-Library/01_Core_Engine/NLWeb/Dockerfile - understand container best practices
+
+Task: Review and enhance the Docker development environment to match the architectural blueprint.
 
 Requirements:
-- Analyze current docker-compose.yml
+- Analyze current docker-compose.yml against architecture requirements
 - Ensure services: nlyzer_api, postgresql, redis, qdrant
 - Add proper health checks and dependency management
-- Configure Poetry-based Python environment
+- Configure Poetry-based Python environment (mandatory per CLAUDE.md)
 - Ensure hot-reloading for development
+- Follow security best practices from OWASP documentation
 - Test with: just quickstart
 
 Files to examine/modify:
 - docker-compose.yml
 - nlyzer_api/Dockerfile
 - justfile
+
+Security Requirements (from OWASP Top 10):
+- No secrets in container images
+- Proper user permissions (non-root)
+- Health checks for all services
+- Network isolation between services
+
+After completion, update CHANGELOG.md with:
+### [1.3] - Docker Development Environment Enhancement
+- Enhanced docker-compose.yml with all required services
+- Configured Poetry-based Python environment
+- Added proper health checks and dependency management
+- Implemented security best practices for containerization
 ```
 
 **Expected Output**: 
@@ -161,11 +243,22 @@ Files to examine/modify:
 
 **AI-PM Prompt**: 
 ```
-Set up the nlyzer_api as a proper Poetry project with the complete dependency structure defined in our architectural blueprint.
+Before setting up the Poetry project structure, read the comprehensive documentation:
+
+Required Reading:
+1. Read README.md - understand the technology stack and project structure
+2. Read CLAUDE.md - understand Poetry requirements and Python patterns (Section 2 & 3)
+3. Read docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md - understand the complete architecture
+4. Read NLyzer-Documentation-Library/03_Backend_Framework/fastapi/README.md - understand FastAPI project structure
+5. Read NLyzer-Documentation-Library/05_Database_Vector/sqlalchemy/README.rst - understand SQLAlchemy patterns
+6. Read NLyzer-Documentation-Library/06_External_Services/stripe-python/README.md - understand Stripe integration
+7. Read NLyzer-Documentation-Library/02_Cloud_Infrastructure/gcp-python-samples/README.md - understand GCP client patterns
+
+Task: Set up the nlyzer_api as a proper Poetry project with the complete dependency structure defined in our architectural blueprint.
 
 Requirements:
 - Initialize Poetry project in nlyzer_api/ if not already done
-- Add all required dependencies to pyproject.toml:
+- Add all required dependencies to pyproject.toml (referencing documentation library versions):
   - fastapi[all]
   - uvicorn[standard]
   - sqlalchemy[asyncio]
@@ -188,6 +281,14 @@ Requirements:
   - httpx
 - Create proper Python package structure in nlyzer_api/nlyzer/
 - Add __init__.py files where needed
+- Follow security best practices from OWASP documentation
+
+After completion, update CHANGELOG.md with:
+### [1.4] - Poetry Project Structure Setup
+- Initialized Poetry project with complete dependency structure
+- Created proper Python package hierarchy following architectural blueprint
+- Added all required dependencies for FastAPI, SQLAlchemy, GCP, and Stripe
+- Implemented security best practices for dependency management
 
 Expected structure:
 nlyzer_api/
@@ -257,11 +358,27 @@ Include proper indexes, constraints, and relationships.
 
 **AI-PM Prompt**: 
 ```
-Implement the security utilities for password hashing and JWT token management. Follow TDD approach.
+Before implementing security utilities, thoroughly read the security documentation:
 
-Requirements:
-- Create test file first: tests/test_security.py
-- Test password hashing, verification, JWT creation/validation
+Required Reading:
+1. Read README.md - understand the security requirements and architecture
+2. Read CLAUDE.md - understand security mandates and patterns (Section 5)
+3. Read docs/IAM_AND_SECRETS_PLAN.md - understand the complete security architecture
+4. Read NLyzer-Documentation-Library/00_Security_And_Compliance/OWASP_Top_10/README.md - understand security vulnerabilities
+5. Read NLyzer-Documentation-Library/00_Security_And_Compliance/OWASP_Top_10/2021/README.md - understand current security threats
+6. Read NLyzer-Documentation-Library/03_Backend_Framework/fastapi/SECURITY.md - understand FastAPI security patterns
+7. Read NLyzer-Documentation-Library/00_Security_And_Compliance/SOC2_Compliance_Checklists/SOC2_TYPE_II_CHECKLIST.md - understand compliance requirements
+
+Task: Implement comprehensive security utilities for password hashing and JWT token management using Test-Driven Development.
+
+Critical Security Requirements (from OWASP Top 10):
+- Protection against A02:2021 – Cryptographic Failures
+- Protection against A03:2021 – Injection attacks
+- Protection against A07:2021 – Identification and Authentication Failures
+
+Implementation Requirements:
+- Create test file first: tests/test_security.py (TDD mandatory per CLAUDE.md)
+- Test password hashing, verification, JWT creation/validation, and attack scenarios
 - Then implement: nlyzer/core/security.py
 
 Security functions required:
@@ -271,11 +388,22 @@ Security functions required:
 4. verify_token(token: str) -> dict
 5. get_current_user(token: str) -> User (dependency injection)
 
-Use:
-- passlib with bcrypt for password hashing
-- python-jose for JWT tokens
-- Proper error handling and security best practices
+Security Implementation:
+- passlib with bcrypt for password hashing (minimum 12 rounds)
+- python-jose for JWT tokens with strong algorithms
+- Proper error handling without information leakage
+- Rate limiting considerations
 - Async patterns throughout
+- Input validation and sanitization
+- Secure token expiration and refresh patterns
+
+After completion, update CHANGELOG.md with:
+### [1.6] - Security Utilities Implementation
+- Implemented comprehensive password hashing with bcrypt
+- Created JWT token management with secure algorithms
+- Added protection against OWASP Top 10 vulnerabilities
+- Implemented TDD approach with comprehensive security test coverage
+- Added rate limiting and input validation protections
 ```
 
 **Expected Files**:
@@ -1101,21 +1229,41 @@ Customizations needed:
 
 **AI-PM Prompt**: 
 ```
-Implement the complete GCP provisioning module as defined in GCP_PROVISIONING_ARCHITECTURE.md.
+Before implementing the GCP provisioning module, thoroughly study the comprehensive documentation:
 
-Requirements:
-- Create comprehensive test suite: tests/test_gcp_provisioning.py
-- Implement all modules in nlyzer/gcp/
-- Follow the exact architecture from the documentation
+Required Reading:
+1. Read README.md - understand the complete NLyzer platform and provisioning requirements
+2. Read CLAUDE.md - understand development patterns and security requirements (Sections 5 & 7)
+3. Read docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md - understand the complete technical architecture
+4. Read docs/GCP_PROVISIONING_ARCHITECTURE.md - understand the EXACT implementation requirements
+5. Read docs/IAM_AND_SECRETS_PLAN.md - understand the security and IAM requirements
+6. Read NLyzer-Documentation-Library/02_Cloud_Infrastructure/gcp-python-samples/README.md - understand GCP Python patterns
+7. Read NLyzer-Documentation-Library/00_Security_And_Compliance/GCP_Security_Foundations_Guide/README.md - understand GCP security best practices
+8. Read NLyzer-Documentation-Library/01_Core_Engine/NLWeb/README.md - understand NLWeb architecture for deployment
+9. Read NLyzer-Documentation-Library/05_Database_Vector/weaviate-examples/README.md - understand Weaviate deployment patterns
+
+Task: Implement the complete GCP provisioning module as defined in GCP_PROVISIONING_ARCHITECTURE.md with enterprise-grade security.
+
+Critical Security Requirements:
+- Complete tenant isolation at project level (mandatory per architectural blueprint)
+- Principle of least privilege IAM permissions
+- No secrets in container images or logs
+- Comprehensive audit logging for compliance
+- Automatic rollback on failures
+
+Implementation Requirements:
+- Create comprehensive test suite: tests/test_gcp_provisioning.py (TDD mandatory)
+- Implement all modules in nlyzer/gcp/ following the exact architecture
 - Include proper error handling and rollback capabilities
+- Follow GCP security best practices from documentation library
 
-Files to implement:
-1. nlyzer/gcp/provisioning.py - Main orchestration logic
-2. nlyzer/gcp/clients.py - GCP client management  
-3. nlyzer/gcp/exceptions.py - Custom exceptions
+Files to implement (per GCP_PROVISIONING_ARCHITECTURE.md):
+1. nlyzer/gcp/provisioning.py - Main orchestration logic (2.2 Core Implementation)
+2. nlyzer/gcp/clients.py - GCP client management (2.3 Client Management)
+3. nlyzer/gcp/exceptions.py - Custom exceptions (2.4 Exception Handling)
 4. nlyzer/gcp/templates/ - Configuration templates
 
-Key functions (from architecture doc):
+Key functions (from architecture doc Section 2.2):
 - provision_new_tenant(tenant_id, config) -> result
 - _create_gcp_project() -> project_id
 - _setup_project_billing() -> None
@@ -1126,11 +1274,22 @@ Key functions (from architecture doc):
 - _deploy_nlweb_to_cloud_run() -> nlweb_url
 - _cleanup_failed_deployment() -> None
 
-Testing requirements:
-- Mock all GCP API calls
+Testing requirements (TDD approach):
+- Mock all GCP API calls (no real GCP calls in tests)
 - Test success and failure scenarios
 - Verify proper cleanup on failures
 - Test configuration template generation
+- Test IAM permission verification
+- Test security boundary enforcement
+
+After completion, update CHANGELOG.md with:
+### [4.4] - GCP Provisioning Module Implementation
+- Implemented complete Infrastructure as Code provisioning pipeline
+- Added comprehensive tenant isolation and security controls
+- Created automated GCP project creation and configuration
+- Implemented NLWeb and Weaviate deployment automation
+- Added complete test coverage with mocked GCP services
+- Implemented automatic rollback and error handling
 ```
 
 **Expected Files**:
@@ -1421,52 +1580,82 @@ Each tool should:
 
 **AI-PM Prompt**: 
 ```
-Build comprehensive Shopify integration for e-commerce functionality.
+Before implementing the Shopify integration, thoroughly study the platform documentation:
 
-Requirements:
-- Create test file: tests/test_shopify_integration.py
+Required Reading:
+1. Read README.md - understand the complete NLyzer platform and e-commerce integration requirements
+2. Read CLAUDE.md - understand development patterns and security requirements (Sections 3 & 5)
+3. Read docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md - understand the e-commerce architecture
+4. Read NLyzer-Documentation-Library/01_Core_Engine/Platform_Integrations/shopify-python/README.md - understand Shopify Python SDK
+5. Read NLyzer-Documentation-Library/01_Core_Engine/Platform_Integrations/shopify-python/SECURITY.md - understand Shopify security patterns
+6. Read NLyzer-Documentation-Library/01_Core_Engine/NLWeb/README.md - understand NLWeb tool integration patterns
+7. Read NLyzer-Documentation-Library/01_Core_Engine/NLWeb/docs/tools.md - understand tool implementation patterns
+8. Read NLyzer-Documentation-Library/05_Database_Vector/weaviate-examples/README.md - understand vector database integration
+
+Task: Build comprehensive Shopify integration for e-commerce functionality with enterprise-grade security and performance.
+
+Critical Security Requirements:
+- Secure API credential management (never log credentials)
+- Input validation and sanitization for all Shopify data
+- Rate limiting compliance with Shopify API limits
+- Webhook signature verification
+- PII protection for customer data
+
+Implementation Requirements:
+- Create comprehensive test suite: tests/test_shopify_integration.py (TDD mandatory)
 - Implement: nlweb_extension/nlweb/integrations/shopify.py
-- Support multiple Shopify stores per tenant
-- Handle webhook events from Shopify
+- Support multiple Shopify stores per tenant with tenant isolation
+- Handle webhook events from Shopify with proper verification
+- Follow async patterns throughout (mandatory per CLAUDE.md)
 
-Shopify integration features:
+Shopify integration features (following platform best practices):
 
 1. Product Catalog Sync:
-   - Fetch all products and variants
-   - Sync to Weaviate vector database
-   - Handle product updates via webhooks
-   - Image and description embeddings
+   - Fetch all products and variants with pagination
+   - Sync to Weaviate vector database with proper embeddings
+   - Handle product updates via webhooks with signature verification
+   - Image and description embeddings with proper error handling
 
 2. Cart Management:
-   - Create and manage cart sessions
-   - Add/remove/update cart items
-   - Calculate shipping and taxes
-   - Apply discount codes
+   - Create and manage cart sessions with proper session handling
+   - Add/remove/update cart items with inventory validation
+   - Calculate shipping and taxes using Shopify APIs
+   - Apply discount codes with proper validation
 
 3. Order Processing:
-   - Create orders from cart
-   - Handle payment processing
-   - Order status tracking
-   - Fulfillment notifications
+   - Create orders from cart with proper validation
+   - Handle payment processing with PCI compliance
+   - Order status tracking with real-time updates
+   - Fulfillment notifications with proper error handling
 
 4. Customer Management:
-   - Customer lookup and creation
-   - Order history retrieval
-   - Wishlist management
-   - Customer segmentation
+   - Customer lookup and creation with PII protection
+   - Order history retrieval with proper access controls
+   - Wishlist management with data persistence
+   - Customer segmentation with privacy compliance
 
-API functions:
+API functions (following Shopify SDK patterns):
 - sync_product_catalog(shop_domain, access_token) -> int
 - create_cart(shop_domain, customer_id) -> cart_id
 - add_to_cart(cart_id, variant_id, quantity) -> cart
 - create_order(cart_id, payment_details) -> order
 - get_customer_orders(customer_id) -> List[Order]
 
-Error handling:
-- Rate limiting (Shopify API limits)
-- Authentication failures
-- Product not found scenarios
-- Payment processing errors
+Error handling (enterprise-grade):
+- Rate limiting (Shopify API limits) with exponential backoff
+- Authentication failures with secure retry logic
+- Product not found scenarios with graceful degradation
+- Payment processing errors with proper user feedback
+- Network failures with circuit breaker patterns
+
+After completion, update CHANGELOG.md with:
+### [5.4] - Shopify Integration Implementation
+- Implemented comprehensive Shopify platform integration
+- Added secure product catalog synchronization with Weaviate
+- Created cart and order management with payment processing
+- Implemented customer data management with PII protection
+- Added webhook processing with signature verification
+- Implemented rate limiting and error handling for production reliability
 ```
 
 **Expected Files**:
