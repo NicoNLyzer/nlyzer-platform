@@ -14,6 +14,7 @@
 
 -   **The Single Source of Truth:** All architectural decisions are defined in `docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md`. All prompts and generated code MUST align with this master plan.
 -   **Infrastructure as Code:** Tenant provisioning architecture is defined in `docs/GCP_PROVISIONING_ARCHITECTURE.md`. This document governs ALL GCP resource creation and IAM permissions.
+-   **Identity & Access Management:** All service accounts, API keys, and security policies are defined in `docs/IAM_AND_SECRETS_PLAN.md`. This document is MANDATORY for any GCP identity or secret management tasks.
 -   **Primary Tech Stack:** Our complete, up-to-date technology stack is defined in the `docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md`. All Python code is async FastAPI on Python 3.10+. All infrastructure is GCP.
 -   **Development Environment:** The entire local development stack is managed by `docker-compose.yml`. All commands should be assumed to run within or via Docker.
 -   **Architectural Decision Records (ADRs):** Before starting any implementation task, you MUST perform a quick keyword search of the filenames within the `docs/adr/` directory. If a relevant ADR exists (e.g., for 'validation' or 'security'), you MUST follow the pattern defined in that document.
@@ -23,10 +24,12 @@
 ## 2. Security Mandates (Non-Negotiable Prime Directive)
 
 -   **Security is our highest priority.** Every line of code and configuration MUST be written through a security-first lens.
+-   **IAM Compliance:** ALL service account creation, role assignments, and secret management MUST follow the patterns defined in `docs/IAM_AND_SECRETS_PLAN.md`. NO exceptions.
 -   **Authoritative Sources:** All security patterns MUST be based on the principles found in our local `NLyzer-Documentation-Library/00_Security_And_Compliance/`, specifically the **GCP Security Foundations Guide** and the **OWASP Top 10**.
--   **Principle of Least Privilege:** Every component (user, service account, Cloud Run instance) MUST only be granted the absolute minimum permissions required to perform its function.
+-   **Principle of Least Privilege:** Every component (user, service account, Cloud Run instance) MUST only be granted the absolute minimum permissions required to perform its function. Reference the IAM plan for precise role assignments.
 -   **Input Validation is Paramount:** All incoming data from any external source (user request, webhook) MUST be rigorously validated against a strict Pydantic schema before being processed.
 -   **Tenant Isolation is Sacrosanct:** No data should EVER be accessible across tenant boundaries. This must be enforced at the database (`WHERE tenant_id = ...`), network (VPC Firewall Rules), and application layers.
+-   **Secret Management:** ALL secrets MUST be stored in GCP Secret Manager following the categorization and rotation schedules defined in the IAM plan. NEVER hardcode credentials.
 
 ---
 

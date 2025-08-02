@@ -14,6 +14,7 @@ All development on this platform is governed by our master planning documents. T
 
 -   **[The Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)** - Complete technical architecture and 28-sprint roadmap
 -   **[GCP Provisioning Architecture](./docs/GCP_PROVISIONING_ARCHITECTURE.md)** - Infrastructure as Code for automated tenant provisioning
+-   **[IAM & Secrets Management Plan](./docs/IAM_AND_SECRETS_PLAN.md)** - Identity, access control, and secrets management strategy
 -   **[Architectural Decision Records](./docs/adr/)** - Documented technical decisions and patterns
 
 ---
@@ -140,16 +141,29 @@ For complete details, see **[GCP Provisioning Architecture](./docs/GCP_PROVISION
 
 Security is our highest priority. Every component follows enterprise security best practices:
 
+### Identity & Access Management
+- **7 Service Accounts** with least-privilege IAM roles across 3 project tiers
+- **20+ Secrets** with automated rotation and tenant-specific isolation
+- **Comprehensive IAM Strategy** documented in [IAM & Secrets Plan](./docs/IAM_AND_SECRETS_PLAN.md)
+
+### Application Security
 - **Input Validation**: Pydantic models for all API inputs (see [ADR 001](./docs/adr/001-pydantic-validation-patterns.md))
 - **Tenant Isolation**: Complete data isolation at database, network, and project levels
 - **Authentication**: JWT-based auth with configurable expiration
-- **Secrets Management**: All credentials stored in Secret Manager, never in code
-- **Audit Logging**: Comprehensive audit trails for compliance
+- **Secrets Management**: All credentials stored in Secret Manager with quarterly rotation
+- **Audit Logging**: Comprehensive audit trails for compliance and forensics
+
+### Infrastructure Security
+- **Project-Level Isolation**: Each tenant gets their own GCP project
+- **Network Segmentation**: VPC firewalls with tenant-specific tags
+- **Conditional Access**: Time-based and IP-restricted service account policies
+- **Emergency Procedures**: Documented incident response for compromised accounts
 
 ## 📚 Documentation
 
 - **[Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)** - Complete technical architecture
 - **[GCP Provisioning Architecture](./docs/GCP_PROVISIONING_ARCHITECTURE.md)** - Infrastructure as Code design
+- **[IAM & Secrets Management Plan](./docs/IAM_AND_SECRETS_PLAN.md)** - Identity and access control strategy
 - **[CLAUDE.md](./CLAUDE.md)** - AI development directives and patterns
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Developer onboarding guide
 - **[Architectural Decision Records](./docs/adr/)** - Technical decisions and patterns
