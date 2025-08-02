@@ -10,9 +10,11 @@ This repository contains the full source code for the NLyzer platform, including
 
 All development on this platform is governed by our master planning documents. These documents contain the complete technical architecture, deployment strategies, infrastructure provisioning, security plans, and frontend designs.
 
-**Before starting any work, please review these definitive guides:**
+**Quick Links:**
 
--   **[The Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)** - Complete technical architecture and 28-sprint roadmap
+-   **[The Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)** - The definitive master plan for the entire platform.
+-   **[The MVP Execution Plan](./docs/NLYZER_MVP_EXECUTION_PLAN.md)** - The step-by-step "Lego Instructions" for building the MVP.
+-   **[The Changelog](./CHANGELOG.md)** - The commit-linked log of all development activities.
 -   **[GCP Provisioning Architecture](./docs/GCP_PROVISIONING_ARCHITECTURE.md)** - Infrastructure as Code for automated tenant provisioning
 -   **[IAM & Secrets Management Plan](./docs/IAM_AND_SECRETS_PLAN.md)** - Identity, access control, and secrets management strategy
 -   **[Architectural Decision Records](./docs/adr/)** - Documented technical decisions and patterns
