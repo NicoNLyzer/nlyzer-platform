@@ -42,28 +42,10 @@ docker-compose exec nlyzer-api pytest -v
 
 ## 🛠️ Core Technologies
 
-| Category | Technology | Purpose |
-|----------|------------|---------|
-| Backend | Python 3.10+, FastAPI | The NLyzer Control Plane API |
-| Core Engine | NLWeb (Open Source) | The AI/Search Engine we deploy |
-| Frontend | Next.js, React, Tailwind | Marketing website & Client-side widget |
-| Database | PostgreSQL | Relational data (users, tenants) |
-| Vector DB | Weaviate | Vector embeddings for semantic search |
-| Cloud | Google Cloud Platform | All production infrastructure |
-| Deployment | Docker, Cloud Run | Containerization & Serverless Compute |
+For the complete, up-to-date technology stack and architectural decisions, see **[The Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)**.
+
+Key technologies include Python/FastAPI for the backend, NLWeb as our core AI engine, Next.js for the frontend, and Google Cloud Platform for infrastructure.
 
 ## 📁 Project Structure
-This is a monorepo containing all artifacts for the NLyzer platform.
 
-```
-nlyzer-platform/
-├── .github/          # CI/CD Workflows
-├── docs/             # Master Architectural Blueprints
-├── nlyzer_api/       # The Python FastAPI Control Plane
-├── nlweb_extension/  # Our extended version of the NLWeb Engine
-├── website/          # The Next.js marketing website
-├── scripts/          # Operational scripts (e.g., data ingestion)
-├── tests/            # Integration tests
-├── CLAUDE.md         # The AI Development Rulebook
-└── README.md         # This file
-```
+This is a monorepo containing all components of the NLyzer platform. For the detailed project structure and component descriptions, refer to **[The Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)**.
