@@ -4,7 +4,7 @@ This document is the official, commit-linked log of all development activities o
 
 ---
 
-## [Sprint 0] - The Secure Foundation - (Commit: `[Initial_Setup_Commit_Hash]`)
+## [Sprint 0] - The Secure Foundation - (Commit: `4514735`)
 
 ### [0.1] - Repository Scaffolding & Documentation Hardening
 -   **Created:** All foundational documents in `docs/`.
