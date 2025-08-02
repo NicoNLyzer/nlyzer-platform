@@ -30,11 +30,10 @@ just quickstart
 ```
 
 That's it! The `quickstart` command will:
-1. Copy `.env.example` to `.env`
-2. Build all Docker images
+1. Copy `.env.example` to `.env` 
+2. Build all Docker images with Poetry
 3. Start all services
-4. Run database migrations
-5. Perform health checks
+4. Show next steps for database setup
 
 ### Manual Setup (Step-by-Step)
 
@@ -52,17 +51,22 @@ If you prefer to understand each step:
    # Edit .env with your actual API keys and secrets
    ```
 
-3. **Start the development environment:**
+3. **Build Docker images:**
    ```bash
-   just  # Builds and starts all services
+   just build
    ```
 
-4. **Run database migrations:**
+4. **Start all services:**
    ```bash
-   just migrate
+   just start
    ```
 
-5. **Verify everything is working:**
+5. **Run database migrations:**
+   ```bash
+   just migrate-up
+   ```
+
+6. **Verify everything is working:**
    ```bash
    just health
    ```
@@ -88,18 +92,18 @@ just logs       # View logs for all services
 just logs-service nlyzer-api  # View logs for specific service
 
 # Testing
-just test-api   # Run API tests
-just test-nlweb # Run NLWeb tests
-just test-all   # Run all tests
+just test       # Run all tests
+just test-cov   # Run tests with coverage
 
 # Code Quality
-just lint-py    # Lint Python code
-just format-py  # Format Python code with Black
+just lint       # Lint Python code with Ruff
+just format     # Format Python code with Ruff
+just quality    # Format, lint, and test everything
 
 # Database
-just migrate    # Run migrations
-just migrate-create "description"  # Create new migration
-just migrate-rollback  # Rollback last migration
+just migrate-up    # Run migrations
+just migrate-make "description"  # Create new migration
+just migrate-down  # Rollback last migration
 
 # Utilities
 just shell-api  # Access API container shell

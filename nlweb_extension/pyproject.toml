@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "nlweb-extension"
+version = "0.1.0"
+description = "NLyzer's customized fork of NLWeb with GCP integrations"
+authors = ["NLyzer Team <team@nlyzer.com>"]
+readme = "README.md"
+packages = [{include = "nlweb"}]
+python = "^3.10"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+# NLWeb dependencies will be added after forking
+google-cloud-storage = "^2.13.0"
+google-cloud-secret-manager = "^2.18.1"
+pyyaml = "^6.0.1"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.14"
+pytest = "^7.4.4"
+pytest-asyncio = "^0.23.3"
+pytest-cov = "^4.1.0"
+
+[tool.ruff]
+line-length = 88
+select = ["F", "E", "W", "I"]
+ignore = []
+target-version = "py310"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
