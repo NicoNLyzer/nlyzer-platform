@@ -377,9 +377,15 @@ Technical Explanation
 
 The Provisioning Cloud Function, triggered by a Pub/Sub message, will generate the nlweb_config.yml file in memory. It will write sensitive credentials to Google Secret Manager and embed the resource paths to those secrets in the YAML. It then uploads this file to a new, dedicated GCS bucket for the tenant.
 
+Additionally, the function securely stores Namecheap API credentials in GCP Secret Manager at the organization level. These credentials are:
+- Stored separately from tenant secrets for the central provisioning function
+- Accessed only by the provisioning service account with roles/secretmanager.secretAccessor
+- Never exposed to tenant projects or stored in tenant configurations
+- Rotated quarterly following security best practices
+
 Simple Explanation
 
-When a work order arrives, our robot locks the client's secret credentials in a digital vault (Secret Manager). It then writes the assembly instructions (config.yml), noting the vault location, and places the instructions in a private folder (Cloud Storage).
+When a work order arrives, our robot locks the client's secret credentials in a digital vault (Secret Manager). It then writes the assembly instructions (config.yml), noting the vault location, and places the instructions in a private folder (Cloud Storage). The master robot also keeps the domain control keys (Namecheap credentials) in a special organization-wide vault, separate from tenant vaults. Only the provisioning robot can access these keys to create DNS records for new tenants.
 
 2.3. The Secure Application
 Technical Explanation
@@ -431,9 +437,18 @@ Hosting Service: GCP Cloud Run. The Next.js application will be containerized wi
 
 Network Configuration: The Cloud Run service will be fronted by a Global External HTTPS Load Balancer. This provides a single global Anycast IP address, manages our SSL certificates via Google-Managed SSL Certificates, and allows us to enable Cloud CDN on the backend service to cache static assets (_next/static/*) at Google's edge locations for optimal performance.
 
+DNS Configuration: After the Global External HTTPS Load Balancer is provisioned and its static IP address is allocated, the Provisioning Cloud Function programmatically configures DNS records via the Namecheap API. The function:
+1. Retrieves Namecheap API credentials from GCP Secret Manager
+2. Initializes the namecheapapi Python client with production endpoints
+3. Creates an A record: {tenant_id}.nlyzer.com → {load_balancer_ip}
+4. Sets TTL to 300 seconds for quick propagation
+5. Validates the DNS record creation and propagation before proceeding
+
 Simple Explanation
 
 We will host our marketing website on GCP Cloud Run. It's like a flexible, pay-as-you-go web server that's perfect for modern Next.js sites. It's fast because it can use Google's global network to serve content from a location near the visitor, and it's cheap because we don't pay anything if nobody is visiting the site.
+
+Once the load balancer gets its permanent address (like a street number), our provisioning robot calls Namecheap to add this address to the global phone book (DNS). So when someone types "acme.nlyzer.com", they're automatically directed to the correct tenant's front door.
 
 3.2. The Tenant Onboarding User Flow (The Forms)
 Technical Explanation
