@@ -12,11 +12,10 @@ All development on this platform is governed by our master planning documents. T
 
 **Quick Links:**
 
--   **[The Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)** - The definitive master plan for the entire platform.
--   **[The MVP Execution Plan](./docs/NLYZER_MVP_EXECUTION_PLAN.md)** - The step-by-step "Lego Instructions" for building the MVP.
+-   **[The Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)** - The definitive master plan for the entire platform (CISO approved, production ready).
+-   **[The Grand Implementation Plan](./docs/GRAND_IMPLEMENTATION_PLAN.md)** - The step-by-step "Lego Instructions" for building the MVP with resolved dependencies.
 -   **[The Changelog](./CHANGELOG.md)** - The commit-linked log of all development activities.
--   **[GCP Provisioning Architecture](./docs/GCP_PROVISIONING_ARCHITECTURE.md)** - Infrastructure as Code for automated tenant provisioning
--   **[IAM & Secrets Management Plan](./docs/IAM_AND_SECRETS_PLAN.md)** - Identity, access control, and secrets management strategy
+-   **[CEO Credential Collection Guide](./docs/CEO_CREDENTIAL_COLLECTION_GUIDE.md)** - Step-by-step guide for obtaining all required API keys and configurations.
 -   **[Architectural Decision Records](./docs/adr/)** - Documented technical decisions and patterns
 
 ---
@@ -73,9 +72,10 @@ For the complete, up-to-date technology stack and architectural decisions, see *
 ### Key Components:
 - **Backend**: Python 3.10+, FastAPI (async), Poetry for dependencies
 - **AI Engine**: NLWeb (customized fork with GCP integrations)
-- **Databases**: PostgreSQL (primary), Redis (cache), Qdrant/Weaviate (vector)
+- **Databases**: PostgreSQL (primary), Redis (cache), Qdrant (vector database - core MVP component)
 - **Infrastructure**: Google Cloud Platform (Cloud Run, GCE, Secret Manager)
-- **Automated Provisioning**: GCP Infrastructure as Code via `nlyzer.gcp` module
+- **Automated Provisioning**: GCP Infrastructure as Code via `nlyzer.gcp` module with consolidated Sprint 4 deployment
+- **Security**: Four critical security controls (Workload Identity, JWT auth, supply chain security, network security)
 - **Frontend**: Next.js 14 with TypeScript
 - **Development**: Docker Compose, Just task runner, Ruff for linting
 
@@ -123,43 +123,57 @@ NLyzer features a sophisticated Infrastructure as Code system for automated tena
 - **Self-Healing**: Automatic rollback on provisioning failures
 
 ### Provisioning Architecture:
-The system automatically creates and configures:
+The system automatically creates and configures (Sprint 4 - Consolidated Deployment):
 1. **Isolated GCP Project** per tenant
-2. **Weaviate Vector Database** on Google Compute Engine
-3. **NLWeb AI Engine** deployed to Cloud Run
-4. **Secure Networking** with VPC and firewall rules
-5. **Configuration Storage** in Cloud Storage buckets
-6. **Secrets Management** via Secret Manager
+2. **Qdrant Vector Database** on Cloud Run (core MVP component)
+3. **NLWeb AI Engine** deployed to Cloud Run with vector search integration
+4. **Sales Agent Configuration** with Shopify integration and multimodal search
+5. **Secure Networking** with VPC and firewall rules
+6. **Configuration Storage** in Cloud Storage buckets
+7. **Secrets Management** via Secret Manager with automated rotation
 
-For complete details, see **[GCP Provisioning Architecture](./docs/GCP_PROVISIONING_ARCHITECTURE.md)**.
+For complete details, see **[The Grand Implementation Plan](./docs/GRAND_IMPLEMENTATION_PLAN.md)** and **[The Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)**.
 
 ## 🔒 Security
 
-Security is our highest priority. Every component follows enterprise security best practices:
+Security is our highest priority. The platform is **CISO approved** and implements enterprise security best practices with four critical security controls:
+
+### Four Critical Security Controls (Mandatory)
+1. **Workload Identity Federation**: Eliminates long-lived service account keys through secure impersonation
+2. **Short-lived JWT Authentication**: Widget and API authentication using origin-bound tokens
+3. **Supply Chain Security**: Image signing with Cosign and Binary Authorization verification
+4. **Internal Network Security**: Service-to-service authentication and VPC egress controls
+
+### Enterprise Security Framework
+- **OWASP Top 10 Compliance**: Complete coverage of web application security risks
+- **SOC 2 Type II Preparation**: Framework for security, availability, and confidentiality
+- **Security Governance**: Incident response, threat detection, and compliance management
+- **Continuous Monitoring**: Real-time security monitoring and automated alerting
 
 ### Identity & Access Management
-- **7 Service Accounts** with least-privilege IAM roles across 3 project tiers
-- **20+ Secrets** with automated rotation and tenant-specific isolation
-- **Comprehensive IAM Strategy** documented in [IAM & Secrets Plan](./docs/IAM_AND_SECRETS_PLAN.md)
+- **Workload Identity Federation** with secure impersonation and audit logging
+- **Principle of Least Privilege** with automated quarterly access reviews
+- **Developer Workflow Security** with secure credential management and MFA enforcement
+- **Service Account Management** with role-based access and conditional policies
 
 ### Application Security
-- **Input Validation**: Pydantic models for all API inputs (see [ADR 001](./docs/adr/001-pydantic-validation-patterns.md))
+- **Input Validation**: Pydantic models for all API inputs with comprehensive schema validation
 - **Tenant Isolation**: Complete data isolation at database, network, and project levels
-- **Authentication**: JWT-based auth with configurable expiration
-- **Secrets Management**: All credentials stored in Secret Manager with quarterly rotation
+- **Authentication**: JWT-based auth with short-lived tokens and origin validation
+- **Secrets Management**: All credentials stored in Secret Manager with automated rotation
 - **Audit Logging**: Comprehensive audit trails for compliance and forensics
 
 ### Infrastructure Security
-- **Project-Level Isolation**: Each tenant gets their own GCP project
-- **Network Segmentation**: VPC firewalls with tenant-specific tags
-- **Conditional Access**: Time-based and IP-restricted service account policies
+- **Project-Level Isolation**: Each tenant gets their own GCP project with strict boundaries
+- **Network Segmentation**: VPC firewalls with tenant-specific tags and egress controls
+- **Binary Authorization**: Container image verification with signature validation
 - **Emergency Procedures**: Documented incident response for compromised accounts
 
 ## 📚 Documentation
 
-- **[Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)** - Complete technical architecture
-- **[GCP Provisioning Architecture](./docs/GCP_PROVISIONING_ARCHITECTURE.md)** - Infrastructure as Code design
-- **[IAM & Secrets Management Plan](./docs/IAM_AND_SECRETS_PLAN.md)** - Identity and access control strategy
+- **[Unified Architectural Blueprint](./docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md)** - Complete technical architecture (CISO approved, production ready)
+- **[Grand Implementation Plan](./docs/GRAND_IMPLEMENTATION_PLAN.md)** - Definitive MVP implementation guide with resolved dependencies
+- **[CEO Credential Collection Guide](./docs/CEO_CREDENTIAL_COLLECTION_GUIDE.md)** - Step-by-step guide for obtaining all required API keys
 - **[CLAUDE.md](./CLAUDE.md)** - AI development directives and patterns
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Developer onboarding guide
 - **[Architectural Decision Records](./docs/adr/)** - Technical decisions and patterns
