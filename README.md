@@ -60,16 +60,10 @@ The main NLyzer API will be available at `http://localhost:8000/docs` (FastAPI S
 
 ### Running the Test Suite
 
+To execute the backend test suite against the running containers, run the following command in a separate terminal:
+
 ```bash
-# Run all tests
-just test
-
-# Run with coverage
-just test-cov
-
-# Format and lint code
-just format
-just lint
+just test-api
 ```
 
 ## 🛠️ Core Technologies

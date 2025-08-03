@@ -14,3 +14,10 @@ venv/
 
 # Instance Folder
 instance/
+
+# macOS System Files
+.DS_Store
+*.DS_Store
+
+# NLyzer Documentation Library (large reference material)
+NLyzer-Documentation-Library/

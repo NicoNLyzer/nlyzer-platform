@@ -43,7 +43,22 @@ You MUST manage every development task using this exact sequence:
 
 ---
 
-## 4. Development Environment & Commands
+## 4. Key Files & Architectural Pointers
+
+-   `nlyzer_api/`: Main FastAPI application entry point.
+-   `nlyzer_api/nlyzer/agents/`: Business Logic Lives Here.
+-   `nlyzer_api/nlyzer/core/`: Contains shared logic (`config.py`, `models.py`, `security.py`).
+-   `nlyzer_api/nlyzer/api/`: FastAPI routers that expose agent logic.
+-   `nlyzer_api/nlyzer/integrations/`: Third-party API clients (Stripe, etc.).
+-   `nlyzer_api/nlyzer/db/`: Contains all SQLAlchemy database table models.
+-   `nlyzer_api/nlyzer/gcp/`: GCP provisioning and infrastructure management.
+-   `tests/`: Contains all pytest unit and integration tests.
+-   `README.md`: The "what" and "why" of the business.
+-   `CLAUDE.md`: (This file) The "how" of the implementation.
+
+---
+
+## 5. Development Environment & Commands
 
 -   **Dependency Management:** **CRITICAL** - Poetry is the ONLY tool for dependency management. NEVER use pip directly or create requirements.txt files. All dependencies MUST be declared in `pyproject.toml` files.
 -   **Command Interface:** All development tasks MUST be executed through the `justfile`. Use `just --list` to see available commands.
@@ -57,7 +72,7 @@ You MUST manage every development task using this exact sequence:
 
 ---
 
-## 5. Code Style & Patterns (MANDATORY)
+## 6. Code Style & Patterns (MANDATORY)
 
 -   **Typing & Docstrings:** **YOU MUST** use Python type hints for all function signatures and Google-style docstrings for all public functions.
 -   **Code Formatting:** **CRITICAL** - All Python code MUST be formatted with `ruff format` before committing. Run `just format` to format all code. Code that is not properly formatted will be rejected.
@@ -67,7 +82,7 @@ You MUST manage every development task using this exact sequence:
 
 ---
 
-## 6. The NLyzer Knowledge Library
+## 7. The NLyzer Knowledge Library
 
 -   I maintain an extensive, up-to-date, local documentation library at `NLyzer-Documentation-Library/`. This is our ultimate source of truth for all third-party integrations.
 -   **DO NOT GUESS.** If you need a specific implementation detail for any service (e.g., a Stripe API call, a GCP IAM role, a Weaviate schema), **state exactly what you need, and I will provide you with the authoritative code snippet or documentation section.**
@@ -75,7 +90,7 @@ You MUST manage every development task using this exact sequence:
 
 ---
 
-## 7. GCP Interaction Patterns (Infrastructure as Code)
+## 8. GCP Interaction Patterns (Infrastructure as Code)
 
 -   **Provisioning Architecture:** **MANDATORY** - All tenant provisioning MUST follow the patterns defined in `docs/GCP_PROVISIONING_ARCHITECTURE.md`. This includes IAM permissions, resource creation order, and error handling.
 -   **Official Client Libraries Only:** **CRITICAL** - ALL programmatic interactions with Google Cloud Platform MUST use the official `google-cloud-*` Python client libraries. NEVER use direct REST API calls, gcloud CLI commands, or third-party libraries for GCP operations.
@@ -113,8 +128,11 @@ async def create_tenant_project(tenant_id: str) -> str:
 
 ---
 
-## 8. Testing Protocol
+## 9. Testing Protocol (MANDATORY)
+
+**Test-Driven Development (TDD) is our standard.** For every new piece of business logic (e.g., in `core/`, `agents/`, `db/`), a corresponding test file MUST be created in the `/tests` directory.
 
 -   **Framework:** We use `pytest`.
--   **Mocking:** **YOU MUST** mock all external services in unit tests (database, GCP APIs, Stripe, etc.). Use `pytest.monkeypatch` or `unittest.mock`.
--   **Location:** Tests live in the top-level `/tests` directory.
+-   **File Location:** Tests live in the top-level `/tests` directory, which mirrors the `nlyzer_api/nlyzer/` app structure (e.g., logic in `nlyzer_api/nlyzer/core/security.py` is tested by `tests/core/test_security.py`).
+-   **Mocking is CRITICAL:** **YOU MUST** mock all external services and I/O operations in unit tests. This includes database sessions, external API calls (Stripe, OpenAI), and file system access. Use `pytest.monkeypatch` and `unittest.mock`. The goal of a unit test is to test the logic of a single function in isolation.
+-   **Test Naming:** Test functions must start with `test_` and be descriptive (e.g., `test_create_access_token_with_valid_data`).
