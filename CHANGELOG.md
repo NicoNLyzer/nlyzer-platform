@@ -26,4 +26,12 @@ This document is the official, commit-linked log of all development activities o
 -   **Integrated:** OWASP Top 10, SOC2 compliance, and GCP Security best practices throughout all prompts.
 -   **Mandated:** Every implementation step requires foundational documentation reading and CHANGELOG updates.
 
+### [0.3] - Repository Cleanup and Organization - (Commit: `337a6fb`)
+-   **Removed:** macOS .DS_Store system file from git tracking.
+-   **Updated:** .gitignore to exclude .DS_Store files and NLyzer-Documentation-Library.
+-   **Removed:** Empty architecture/ placeholder folder.
+-   **Created:** `docs/UX_RESEARCH.md` placeholder to fix broken documentation reference.
+-   **Preserved:** All UX and design documentation (UX_FLOWS.md, WEBSITE_DESIGN.md) for future reference.
+-   **Enhanced:** Documentation consistency with TDD integration across core files.
+
 ---
