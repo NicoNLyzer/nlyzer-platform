@@ -12,7 +12,7 @@
 ## 1. The Core Workflow & Documentation Hierarchy
 
 -   **The Founder (CEO):** The human operator. I will initiate sprints and steps from the MVP plan. I am responsible for running tests and providing the final Git commit hash.
--   **The Master Plan:** Your primary source of truth for *what* to build is the `docs/NLYZER_MVP_EXECUTION_PLAN.md`.
+-   **The Master Plan:** Your primary source of truth for *what* to build is the `docs/GRAND_IMPLEMENTATION_PLAN.md` - the definitive MVP implementation guide with resolved dependencies.
 -   **The Long-Term Memory:** The `CHANGELOG.md` is the record of what has already been built. You MUST review it before generating any new prompt to ensure you have the correct context.
 
 ### The Git-Flow Mandate
@@ -28,12 +28,17 @@ You MUST manage every development task using this exact sequence:
 ## 2. Security Mandates (Non-Negotiable Prime Directive)
 
 -   **Security is our highest priority.** Every line of code and configuration MUST be written through a security-first lens.
--   **IAM Compliance:** ALL service account creation, role assignments, and secret management MUST follow the patterns defined in `docs/IAM_AND_SECRETS_PLAN.md`. NO exceptions.
+-   **CISO Approved Architecture:** ALL security implementations MUST follow the patterns defined in `docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md` which has been CISO approved and is ready for production deployment.
+-   **Four Critical Security Controls:** ALL implementations MUST include these mandatory security controls:
+    1. **Workload Identity Federation:** Eliminate long-lived service account keys through secure impersonation (Section 10)
+    2. **Short-lived JWT Authentication:** Widget and API authentication using origin-bound tokens (Section 8.1)
+    3. **Supply Chain Security:** Image signing with Cosign and Binary Authorization verification (Section 9.3)
+    4. **Internal Network Security:** Service-to-service authentication and VPC egress controls (Section 9.5)
 -   **Authoritative Sources:** All security patterns MUST be based on the principles found in our local `NLyzer-Documentation-Library/00_Security_And_Compliance/`, specifically the **GCP Security Foundations Guide** and the **OWASP Top 10**.
--   **Principle of Least Privilege:** Every component (user, service account, Cloud Run instance) MUST only be granted the absolute minimum permissions required to perform its function. Reference the IAM plan for precise role assignments.
+-   **Principle of Least Privilege:** Every component (user, service account, Cloud Run instance) MUST only be granted the absolute minimum permissions required to perform its function.
 -   **Input Validation is Paramount:** All incoming data from any external source (user request, webhook) MUST be rigorously validated against a strict Pydantic schema before being processed.
 -   **Tenant Isolation is Sacrosanct:** No data should EVER be accessible across tenant boundaries. This must be enforced at the database (`WHERE tenant_id = ...`), network (VPC Firewall Rules), and application layers.
--   **Secret Management:** ALL secrets MUST be stored in GCP Secret Manager following the categorization and rotation schedules defined in the IAM plan. NEVER hardcode credentials.
+-   **Secret Management:** ALL secrets MUST be stored in GCP Secret Manager with automated rotation and secure access patterns. NEVER hardcode credentials.
 
 ---
 
@@ -86,13 +91,15 @@ You MUST manage every development task using this exact sequence:
 
 -   I maintain an extensive, up-to-date, local documentation library at `NLyzer-Documentation-Library/`. This is our ultimate source of truth for all third-party integrations.
 -   **DO NOT GUESS.** If you need a specific implementation detail for any service (e.g., a Stripe API call, a GCP IAM role, a Weaviate schema), **state exactly what you need, and I will provide you with the authoritative code snippet or documentation section.**
+-   **Vector Database Integration:** The Qdrant vector database is a CORE MVP component. All implementations MUST include vector database setup and configuration as part of the automated provisioning pipeline.
+-   **Consolidated Sprint 4:** The "Automated Sales Agent Deployment" sprint combines infrastructure provisioning AND sales agent configuration in one atomic operation to eliminate coordination complexity.
 -   **Domain Services (`Namecheap`):** For programmatic DNS management. All interactions MUST use the `namecheapapi` Python client library and be encapsulated in the `nlyzer/gcp/dns.py` module. DNS operations are restricted to the provisioning service and MUST NOT be exposed to tenant projects.
 
 ---
 
 ## 8. GCP Interaction Patterns (Infrastructure as Code)
 
--   **Provisioning Architecture:** **MANDATORY** - All tenant provisioning MUST follow the patterns defined in `docs/GCP_PROVISIONING_ARCHITECTURE.md`. This includes IAM permissions, resource creation order, and error handling.
+-   **Provisioning Architecture:** **MANDATORY** - All tenant provisioning MUST follow the patterns defined in `docs/UNIFIED_ARCHITECTURAL_BLUEPRINT.md` and `docs/GRAND_IMPLEMENTATION_PLAN.md`. This includes IAM permissions, resource creation order, vector database deployment, and error handling.
 -   **Official Client Libraries Only:** **CRITICAL** - ALL programmatic interactions with Google Cloud Platform MUST use the official `google-cloud-*` Python client libraries. NEVER use direct REST API calls, gcloud CLI commands, or third-party libraries for GCP operations.
 -   **Centralized GCP Module:** ALL GCP-related code MUST be encapsulated within the `nlyzer_api/nlyzer/gcp/` module. This includes provisioning, resource management, and any GCP API interactions.
 -   **Client Manager Pattern:** Use the `GCPClientManager` class from `nlyzer.gcp.clients` for all GCP client initialization. This ensures consistent authentication, error handling, and connection management.
